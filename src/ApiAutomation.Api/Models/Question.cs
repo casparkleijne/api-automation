@@ -222,3 +222,53 @@ public record QuestionRequestType(
     string StartDate,
     string EndDate
 );
+
+/// <summary>
+/// Represents an answer option for a question (Antwoord)
+/// </summary>
+public record Answer(
+    /// <summary>Unique identifier</summary>
+    Guid Id,
+    /// <summary>Answer code</summary>
+    string? Code,
+    /// <summary>Answer text</summary>
+    string? Text,
+    /// <summary>Answer description</summary>
+    string? Description,
+    /// <summary>Question ID this answer belongs to</summary>
+    Guid QuestionId,
+    /// <summary>Display order</summary>
+    int DisplayOrder,
+    /// <summary>Whether this is the default answer</summary>
+    bool IsDefault,
+    /// <summary>Whether this answer is active</summary>
+    bool IsActive,
+    /// <summary>Created timestamp in ISO 8601 format</summary>
+    string CreatedAt,
+    /// <summary>Modified timestamp in ISO 8601 format</summary>
+    string? ModifiedAt
+);
+
+/// <summary>
+/// Request model for creating an answer
+/// </summary>
+public record CreateAnswerRequest(
+    string? Code,
+    string Text,
+    string? Description,
+    Guid QuestionId,
+    int DisplayOrder,
+    bool IsDefault
+);
+
+/// <summary>
+/// Request model for updating an answer
+/// </summary>
+public record UpdateAnswerRequest(
+    string? Code,
+    string? Text,
+    string? Description,
+    int? DisplayOrder,
+    bool? IsDefault,
+    bool? IsActive
+);

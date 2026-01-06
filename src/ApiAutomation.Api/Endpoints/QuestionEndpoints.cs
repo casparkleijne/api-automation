@@ -10,45 +10,78 @@ public static class QuestionEndpoints
     {
         new Question(
             Id: Guid.Parse("99999999-9999-9999-9999-999999999991"),
+            Name: "Connection Capacity",
+            Description: "Question about connection capacity",
+            WebsiteLink: null,
+            WebsiteText: null,
+            Placeholder: "Select capacity",
             Code: "Q001",
-            Text: "What is the requested connection capacity?",
-            HelpText: "Select the amperage for your electricity connection",
-            QuestionType: "select",
-            IsRequired: true,
-            DisplayOrder: 1,
-            ProductId: Guid.Parse("88888888-8888-8888-8888-888888888881"),
-            ServiceId: null,
+            Priority: 1,
+            QuestionTitle: "Connection Capacity",
+            QuestionText: "What is the requested connection capacity?",
+            ResultFormat: "select",
+            HasAction: false,
+            IsEnabled: true,
+            AnswerHandler: 1,
+            IsMandatory: true,
+            AnswerTypeId: null,
+            ShowForAddressableObjects: true,
+            ShowForNonAddressableObjects: false,
+            ShowForAddressableObjectsOnly: false,
+            QuestionRequestTypeId: null,
             IsActive: true,
-            CreatedAt: "2025-01-01T00:00:00.000Z",
-            ModifiedAt: null
+            StartDate: "2025-01-01T00:00:00.000Z",
+            EndDate: "2099-12-31T23:59:59.999Z"
         ),
         new Question(
             Id: Guid.Parse("99999999-9999-9999-9999-999999999992"),
+            Name: "Installation Date",
+            Description: "Question about preferred installation date",
+            WebsiteLink: null,
+            WebsiteText: null,
+            Placeholder: "Select date",
             Code: "Q002",
-            Text: "What is the preferred installation date?",
-            HelpText: "Enter your preferred date for the installation",
-            QuestionType: "date",
-            IsRequired: true,
-            DisplayOrder: 2,
-            ProductId: null,
-            ServiceId: Guid.Parse("66666666-6666-6666-6666-666666666661"),
+            Priority: 2,
+            QuestionTitle: "Installation Date",
+            QuestionText: "What is the preferred installation date?",
+            ResultFormat: "date",
+            HasAction: false,
+            IsEnabled: true,
+            AnswerHandler: 2,
+            IsMandatory: true,
+            AnswerTypeId: null,
+            ShowForAddressableObjects: true,
+            ShowForNonAddressableObjects: true,
+            ShowForAddressableObjectsOnly: false,
+            QuestionRequestTypeId: null,
             IsActive: true,
-            CreatedAt: "2025-01-01T00:00:00.000Z",
-            ModifiedAt: null
+            StartDate: "2025-01-01T00:00:00.000Z",
+            EndDate: "2099-12-31T23:59:59.999Z"
         ),
         new Question(
             Id: Guid.Parse("99999999-9999-9999-9999-999999999993"),
+            Name: "Temporary Power",
+            Description: "Question about temporary power supply",
+            WebsiteLink: null,
+            WebsiteText: null,
+            Placeholder: null,
             Code: "Q003",
-            Text: "Do you need a temporary power supply during construction?",
-            HelpText: "Select yes if you need temporary power before the permanent connection is ready",
-            QuestionType: "boolean",
-            IsRequired: false,
-            DisplayOrder: 3,
-            ProductId: null,
-            ServiceId: Guid.Parse("66666666-6666-6666-6666-666666666661"),
+            Priority: 3,
+            QuestionTitle: "Temporary Power Supply",
+            QuestionText: "Do you need a temporary power supply during construction?",
+            ResultFormat: "boolean",
+            HasAction: false,
+            IsEnabled: true,
+            AnswerHandler: 3,
+            IsMandatory: false,
+            AnswerTypeId: null,
+            ShowForAddressableObjects: true,
+            ShowForNonAddressableObjects: true,
+            ShowForAddressableObjectsOnly: false,
+            QuestionRequestTypeId: null,
             IsActive: true,
-            CreatedAt: "2025-01-01T00:00:00.000Z",
-            ModifiedAt: null
+            StartDate: "2025-01-01T00:00:00.000Z",
+            EndDate: "2099-12-31T23:59:59.999Z"
         )
     };
 
@@ -98,17 +131,17 @@ public static class QuestionEndpoints
             .WithTags("Questions");
 
         // GET /api/v1/questions - List all questions
-        questionGroup.MapGet("/", (int? page, int? pageSize, Guid? productId, Guid? serviceId, bool? activeOnly) =>
+        questionGroup.MapGet("/", (int? page, int? pageSize, Guid? answerTypeId, bool? activeOnly, bool? mandatoryOnly) =>
         {
             var currentPage = Math.Max(1, page ?? 1);
             var currentPageSize = Math.Clamp(pageSize ?? 20, 1, 100);
 
             var filtered = _questions.AsEnumerable();
             if (activeOnly == true) filtered = filtered.Where(x => x.IsActive);
-            if (productId.HasValue) filtered = filtered.Where(x => x.ProductId == productId);
-            if (serviceId.HasValue) filtered = filtered.Where(x => x.ServiceId == serviceId);
+            if (mandatoryOnly == true) filtered = filtered.Where(x => x.IsMandatory);
+            if (answerTypeId.HasValue) filtered = filtered.Where(x => x.AnswerTypeId == answerTypeId);
 
-            var list = filtered.OrderBy(x => x.DisplayOrder).ToList();
+            var list = filtered.OrderBy(x => x.Priority).ToList();
             var totalCount = list.Count;
             var totalPages = (int)Math.Ceiling(totalCount / (double)currentPageSize);
 
@@ -129,7 +162,7 @@ public static class QuestionEndpoints
         .WithOpenApi(op =>
         {
             op.Summary = "List questions";
-            op.Description = "Returns a paginated list of all questions. Can be filtered by product or service.";
+            op.Description = "Returns a paginated list of all questions. Can be filtered by answer type or mandatory status.";
             return op;
         })
         .Produces<PaginatedResponse<Question>>(StatusCodes.Status200OK)
@@ -192,20 +225,30 @@ public static class QuestionEndpoints
         // POST /api/v1/questions - Create new question
         questionGroup.MapPost("/", (CreateQuestionRequest request) =>
         {
-            var now = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
             var newItem = new Question(
                 Id: Guid.NewGuid(),
+                Name: request.Name,
+                Description: request.Description,
+                WebsiteLink: request.WebsiteLink,
+                WebsiteText: request.WebsiteText,
+                Placeholder: request.Placeholder,
                 Code: request.Code,
-                Text: request.Text,
-                HelpText: request.HelpText,
-                QuestionType: request.QuestionType,
-                IsRequired: request.IsRequired,
-                DisplayOrder: request.DisplayOrder,
-                ProductId: request.ProductId,
-                ServiceId: request.ServiceId,
+                Priority: request.Priority,
+                QuestionTitle: request.QuestionTitle,
+                QuestionText: request.QuestionText,
+                ResultFormat: request.ResultFormat,
+                HasAction: request.HasAction,
+                IsEnabled: request.IsEnabled,
+                AnswerHandler: request.AnswerHandler,
+                IsMandatory: request.IsMandatory,
+                AnswerTypeId: request.AnswerTypeId,
+                ShowForAddressableObjects: request.ShowForAddressableObjects,
+                ShowForNonAddressableObjects: request.ShowForNonAddressableObjects,
+                ShowForAddressableObjectsOnly: request.ShowForAddressableObjectsOnly,
+                QuestionRequestTypeId: request.QuestionRequestTypeId,
                 IsActive: true,
-                CreatedAt: now,
-                ModifiedAt: null
+                StartDate: request.StartDate,
+                EndDate: request.EndDate
             );
 
             _questions.Add(newItem);
@@ -239,19 +282,30 @@ public static class QuestionEndpoints
             }
 
             var existing = _questions[index];
-            var now = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
             var updated = existing with
             {
+                Name = request.Name ?? existing.Name,
+                Description = request.Description ?? existing.Description,
+                WebsiteLink = request.WebsiteLink ?? existing.WebsiteLink,
+                WebsiteText = request.WebsiteText ?? existing.WebsiteText,
+                Placeholder = request.Placeholder ?? existing.Placeholder,
                 Code = request.Code ?? existing.Code,
-                Text = request.Text ?? existing.Text,
-                HelpText = request.HelpText ?? existing.HelpText,
-                QuestionType = request.QuestionType ?? existing.QuestionType,
-                IsRequired = request.IsRequired ?? existing.IsRequired,
-                DisplayOrder = request.DisplayOrder ?? existing.DisplayOrder,
-                ProductId = request.ProductId ?? existing.ProductId,
-                ServiceId = request.ServiceId ?? existing.ServiceId,
+                Priority = request.Priority ?? existing.Priority,
+                QuestionTitle = request.QuestionTitle ?? existing.QuestionTitle,
+                QuestionText = request.QuestionText ?? existing.QuestionText,
+                ResultFormat = request.ResultFormat ?? existing.ResultFormat,
+                HasAction = request.HasAction ?? existing.HasAction,
+                IsEnabled = request.IsEnabled ?? existing.IsEnabled,
+                AnswerHandler = request.AnswerHandler ?? existing.AnswerHandler,
+                IsMandatory = request.IsMandatory ?? existing.IsMandatory,
+                AnswerTypeId = request.AnswerTypeId ?? existing.AnswerTypeId,
+                ShowForAddressableObjects = request.ShowForAddressableObjects ?? existing.ShowForAddressableObjects,
+                ShowForNonAddressableObjects = request.ShowForNonAddressableObjects ?? existing.ShowForNonAddressableObjects,
+                ShowForAddressableObjectsOnly = request.ShowForAddressableObjectsOnly ?? existing.ShowForAddressableObjectsOnly,
+                QuestionRequestTypeId = request.QuestionRequestTypeId ?? existing.QuestionRequestTypeId,
                 IsActive = request.IsActive ?? existing.IsActive,
-                ModifiedAt = now
+                StartDate = request.StartDate ?? existing.StartDate,
+                EndDate = request.EndDate ?? existing.EndDate
             };
 
             _questions[index] = updated;
