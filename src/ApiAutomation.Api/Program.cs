@@ -1,3 +1,5 @@
+using ApiAutomation.Api.Endpoints;
+using ApiAutomation.Api.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
@@ -15,23 +17,34 @@ builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo
     {
-        Title = "api-automation",
+        Title = "MijnAansluiting Netbeheerders API",
         Description = """
             # API Version - 1.0.0
 
-            API automation and integration framework for the energy sector.
+            API for managing energy grid connections, services, products, and pricing in the Dutch energy sector.
+            Built according to MFF-BAS API Ontwerprichtlijnen v5.0.
+
+            ## Features
+            - Connection Objects (Aansluitingsobjecten)
+            - Grid Operators (Netbeheerders)
+            - Disciplines (Electricity, Gas, District Heating)
+            - Services and Sub-Services
+            - Products
+            - Questions and Answers
+            - Price Components
 
             ## Changelog
 
-            ## 1.0.0 (2025-01-06)
-            * Initial release with health and secure endpoints
+            ### 1.0.0 (2025-01-06)
+            * Initial release
+            * Full MFF-BAS v5.0 compliance
             * Microsoft Entra ID authentication
             """,
         Version = "v1.0.0",
         Contact = new OpenApiContact
         {
             Name = "API Support",
-            Email = "support@example.com"
+            Email = "support@mijnaansluiting.nl"
         },
         License = new OpenApiLicense
         {
@@ -112,6 +125,7 @@ app.MapGet("/api/v1/health", () =>
     ));
 })
 .WithName("GetHealth")
+.WithTags("Health")
 .WithOpenApi(operation =>
 {
     operation.Summary = "Health check endpoint";
@@ -137,6 +151,7 @@ app.MapGet("/api/v1/secure", (HttpContext context) =>
     ));
 })
 .WithName("GetSecure")
+.WithTags("Authentication")
 .WithOpenApi(operation =>
 {
     operation.Summary = "Secure endpoint";
@@ -151,30 +166,16 @@ app.MapGet("/api/v1/secure", (HttpContext context) =>
 .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError)
 .Produces<ProblemDetails>(StatusCodes.Status503ServiceUnavailable);
 
+// Map all API endpoints
+app.MapConnectionObjectEndpoints();
+app.MapGridOperatorEndpoints();
+app.MapDisciplineEndpoints();
+app.MapServiceEndpoints();
+app.MapProductEndpoints();
+app.MapQuestionEndpoints();
+app.MapPriceComponentEndpoints();
+
 app.Run();
-
-// Response models with proper string constraints (ID14)
-/// <summary>Health check response</summary>
-public record HealthResponse(
-    /// <summary>Health status</summary>
-    string Status,
-    /// <summary>Timestamp in ISO 8601 UTC format</summary>
-    string Timestamp,
-    /// <summary>API version</summary>
-    string Version
-);
-
-/// <summary>Secure endpoint response</summary>
-public record SecureResponse(
-    /// <summary>Response message</summary>
-    string Message,
-    /// <summary>User name from token</summary>
-    string UserName,
-    /// <summary>Object ID (oid) from token</summary>
-    string ObjectId,
-    /// <summary>Timestamp in ISO 8601 UTC format</summary>
-    string Timestamp
-);
 
 // Custom headers operation filter for Swagger (ID20)
 public class CustomHeadersOperationFilter : Swashbuckle.AspNetCore.SwaggerGen.IOperationFilter

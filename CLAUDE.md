@@ -7,7 +7,7 @@ This document provides context and guidelines for AI assistants working on this 
 **Repository:** api-automation
 **Framework:** .NET 8 (Minimal API)
 **Language:** C#
-**Purpose:** API automation and integration framework
+**Purpose:** MijnAansluiting Netbeheerders API - Energy grid connection management
 **Authentication:** Microsoft Entra ID (Azure AD)
 **API Standards:** MFF-BAS API Ontwerprichtlijnen v5.0
 
@@ -21,10 +21,27 @@ api-automation/
 ├── src/
 │   └── ApiAutomation.Api/                 # Main API project
 │       ├── ApiAutomation.Api.csproj       # Project file
-│       ├── Program.cs                     # Application entry point & endpoints
+│       ├── Program.cs                     # Application entry point
+│       ├── Models/                        # Domain models
+│       │   ├── Common.cs                  # Shared models (pagination, responses)
+│       │   ├── ConnectionObject.cs        # Connection object models
+│       │   ├── GridOperator.cs            # Grid operator models
+│       │   ├── Discipline.cs              # Discipline models
+│       │   ├── Service.cs                 # Service/SubService models
+│       │   ├── Product.cs                 # Product models
+│       │   ├── Question.cs                # Question/Answer models
+│       │   └── PriceComponent.cs          # Price component models
+│       ├── Endpoints/                     # API endpoint definitions
+│       │   ├── ConnectionObjectEndpoints.cs
+│       │   ├── GridOperatorEndpoints.cs
+│       │   ├── DisciplineEndpoints.cs
+│       │   ├── ServiceEndpoints.cs
+│       │   ├── ProductEndpoints.cs
+│       │   ├── QuestionEndpoints.cs
+│       │   └── PriceComponentEndpoints.cs
 │       ├── Properties/
 │       │   └── launchSettings.json        # Development launch settings
-│       ├── appsettings.json               # Configuration (includes AzureAd settings)
+│       ├── appsettings.json               # Configuration
 │       └── appsettings.Development.json   # Development configuration
 ├── .gitignore                             # Git ignore rules
 └── CLAUDE.md                              # This file
@@ -47,7 +64,7 @@ This API follows the MFF-BAS API Ontwerprichtlijnen v5.0. Key guidelines impleme
 | ID02 | Version management | Versioned endpoints `/api/v1/...` |
 | ID05 | RFC 7807 error responses | `ProblemDetails` for all errors |
 | ID07 | OpenAPI Info object | Title, description, version, x-releaseDate, contact, license |
-| ID10 | HTTP status codes | Proper codes per endpoint (200, 400, 401, 403, 500, 503) |
+| ID10 | HTTP status codes | Proper codes per endpoint (200, 201, 204, 400, 401, 403, 404, 409, 500, 503) |
 | ID13 | ISO 8601 date/time | UTC format: `yyyy-MM-ddTHH:mm:ss.fffZ` |
 | ID15 | OAuth 2.0 authorization | Microsoft Entra ID with JWT Bearer tokens |
 | ID20 | HTTP headers | X-Correlation-ID, X-Request-ID support |
@@ -55,16 +72,177 @@ This API follows the MFF-BAS API Ontwerprichtlijnen v5.0. Key guidelines impleme
 
 ## API Endpoints
 
-| Method | Endpoint | Auth | Description | Response |
-|--------|----------|------|-------------|----------|
-| GET | `/api/v1/health` | No | Health check endpoint | `HealthResponse` |
-| GET | `/api/v1/secure` | Yes | Protected endpoint | `SecureResponse` |
+### Health & Authentication
 
-### Response Models
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| GET | `/api/v1/health` | No | Health check endpoint |
+| GET | `/api/v1/secure` | Yes | Protected endpoint (returns user info) |
+
+### Connection Objects (Aansluitingsobjecten)
+
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| GET | `/api/v1/connection-objects` | No | List all connection objects (paginated) |
+| GET | `/api/v1/connection-objects/{id}` | No | Get connection object by ID |
+| GET | `/api/v1/connection-objects/by-ean/{ean}` | No | Get connection object by EAN code |
+| POST | `/api/v1/connection-objects` | Yes | Create new connection object |
+| PUT | `/api/v1/connection-objects/{id}` | Yes | Update connection object |
+| DELETE | `/api/v1/connection-objects/{id}` | Yes | Delete connection object |
+
+### Grid Operators (Netbeheerders)
+
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| GET | `/api/v1/grid-operators` | No | List all grid operators (paginated) |
+| GET | `/api/v1/grid-operators/{id}` | No | Get grid operator by ID |
+| GET | `/api/v1/grid-operators/by-code/{code}` | No | Get grid operator by code |
+| POST | `/api/v1/grid-operators` | Yes | Create new grid operator |
+| PUT | `/api/v1/grid-operators/{id}` | Yes | Update grid operator |
+| DELETE | `/api/v1/grid-operators/{id}` | Yes | Delete grid operator |
+
+### Disciplines
+
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| GET | `/api/v1/disciplines` | No | List all disciplines (paginated) |
+| GET | `/api/v1/disciplines/{id}` | No | Get discipline by ID |
+| GET | `/api/v1/disciplines/by-code/{code}` | No | Get discipline by code (EL, GAS, HEAT) |
+| POST | `/api/v1/disciplines` | Yes | Create new discipline |
+| PUT | `/api/v1/disciplines/{id}` | Yes | Update discipline |
+| DELETE | `/api/v1/disciplines/{id}` | Yes | Delete discipline |
+
+### Services (Diensten)
+
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| GET | `/api/v1/services` | No | List all services (paginated) |
+| GET | `/api/v1/services/{id}` | No | Get service by ID |
+| GET | `/api/v1/services/{id}/sub-services` | No | List sub-services for a service |
+| POST | `/api/v1/services` | Yes | Create new service |
+| PUT | `/api/v1/services/{id}` | Yes | Update service |
+| DELETE | `/api/v1/services/{id}` | Yes | Delete service |
+
+### Sub-Services (SubDiensten)
+
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| GET | `/api/v1/sub-services` | No | List all sub-services (paginated) |
+| GET | `/api/v1/sub-services/{id}` | No | Get sub-service by ID |
+| POST | `/api/v1/sub-services` | Yes | Create new sub-service |
+| PUT | `/api/v1/sub-services/{id}` | Yes | Update sub-service |
+| DELETE | `/api/v1/sub-services/{id}` | Yes | Delete sub-service |
+
+### Products
+
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| GET | `/api/v1/products` | No | List all products (paginated, filterable) |
+| GET | `/api/v1/products/{id}` | No | Get product by ID |
+| GET | `/api/v1/products/by-code/{code}` | No | Get product by code |
+| POST | `/api/v1/products` | Yes | Create new product |
+| PUT | `/api/v1/products/{id}` | Yes | Update product |
+| DELETE | `/api/v1/products/{id}` | Yes | Delete product |
+
+### Questions (Vragen)
+
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| GET | `/api/v1/questions` | No | List all questions (paginated) |
+| GET | `/api/v1/questions/{id}` | No | Get question by ID |
+| GET | `/api/v1/questions/{id}/answers` | No | List answers for a question |
+| POST | `/api/v1/questions` | Yes | Create new question |
+| PUT | `/api/v1/questions/{id}` | Yes | Update question |
+| DELETE | `/api/v1/questions/{id}` | Yes | Delete question |
+
+### Answers (Antwoorden)
+
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| GET | `/api/v1/answers` | No | List all answers (paginated) |
+| GET | `/api/v1/answers/{id}` | No | Get answer by ID |
+| POST | `/api/v1/answers` | Yes | Create new answer |
+| PUT | `/api/v1/answers/{id}` | Yes | Update answer |
+| DELETE | `/api/v1/answers/{id}` | Yes | Delete answer |
+
+### Price Components (PrijsComponenten)
+
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| GET | `/api/v1/price-components` | No | List all price components (paginated) |
+| GET | `/api/v1/price-components/{id}` | No | Get price component by ID |
+| GET | `/api/v1/price-components/by-code/{code}` | No | Get price component by code |
+| POST | `/api/v1/price-components` | Yes | Create new price component |
+| PUT | `/api/v1/price-components/{id}` | Yes | Update price component |
+| DELETE | `/api/v1/price-components/{id}` | Yes | Delete price component |
+
+## Domain Models
+
+### Core Entities
 
 ```csharp
-public record HealthResponse(string Status, string Timestamp, string Version);
-public record SecureResponse(string Message, string UserName, string ObjectId, string Timestamp);
+// Connection Object - represents an energy grid connection point
+public record ConnectionObject(
+    Guid Id, string? Ean, string? PostalCode, int? HouseNumber,
+    string? HouseNumberAddition, string? Street, string? City,
+    string? Country, string? Status, Guid? GridOperatorId,
+    string CreatedAt, string? ModifiedAt
+);
+
+// Grid Operator - manages energy infrastructure
+public record GridOperator(
+    Guid Id, string Code, string Name, string? Description,
+    string? EanPrefix, string? Email, string? Phone, string? Website,
+    bool IsActive, string CreatedAt, string? ModifiedAt
+);
+
+// Discipline - energy type (Electricity, Gas, District Heating)
+public record Discipline(
+    Guid Id, string Code, string Name, string? Description,
+    bool IsActive, string CreatedAt, string? ModifiedAt
+);
+
+// Service - offered by grid operators
+public record Service(
+    Guid Id, string Code, string Name, string? Description,
+    Guid? DisciplineId, bool IsActive, string CreatedAt, string? ModifiedAt
+);
+
+// Product - specific offerings
+public record Product(
+    Guid Id, string Code, string Name, string? Description,
+    Guid? DisciplineId, Guid? ServiceId, Guid? SubServiceId,
+    Guid? GridOperatorId, string? ProductType, bool IsActive,
+    string? EffectiveFrom, string? EffectiveTo,
+    string CreatedAt, string? ModifiedAt
+);
+
+// Price Component - pricing for products/services
+public record PriceComponent(
+    Guid Id, string Code, string Name, string? Description,
+    Guid? ProductId, Guid? ServiceId, Guid? GridOperatorId,
+    decimal Amount, string Currency, string? Unit,
+    decimal? VatPercentage, bool VatIncluded, string? PriceType,
+    string? EffectiveFrom, string? EffectiveTo,
+    bool IsActive, string CreatedAt, string? ModifiedAt
+);
+```
+
+### Pagination
+
+All list endpoints support pagination:
+- `page` - Page number (1-based, default: 1)
+- `pageSize` - Items per page (default: 20, max: 100)
+
+Response format:
+```json
+{
+  "items": [...],
+  "page": 1,
+  "pageSize": 20,
+  "totalCount": 100,
+  "totalPages": 5
+}
 ```
 
 ### Error Responses (RFC 7807)
@@ -72,11 +250,11 @@ public record SecureResponse(string Message, string UserName, string ObjectId, s
 All errors return `ProblemDetails`:
 ```json
 {
-  "type": "https://tools.ietf.org/html/rfc7231#section-6.5.1",
-  "title": "Bad Request",
-  "status": 400,
-  "detail": "Validation error details",
-  "instance": "/api/v1/endpoint"
+  "type": "https://tools.ietf.org/html/rfc7231#section-6.5.4",
+  "title": "Not Found",
+  "status": 404,
+  "detail": "Connection object with ID '...' was not found.",
+  "instance": "/api/v1/connection-objects/..."
 }
 ```
 
@@ -119,9 +297,12 @@ az account get-access-token --resource api://YOUR_CLIENT_ID
 ### Calling Protected Endpoints
 
 ```bash
-curl -H "Authorization: Bearer YOUR_TOKEN" \
-     -H "X-Correlation-ID: $(uuidgen)" \
-     https://localhost:5001/api/v1/secure
+# Create a new connection object
+curl -X POST https://localhost:5001/api/v1/connection-objects \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -H "X-Correlation-ID: $(uuidgen)" \
+  -d '{"postalCode":"1234AB","houseNumber":1}'
 ```
 
 ## Development Workflow
@@ -159,54 +340,6 @@ dotnet publish -c Release # Publish for production
 - **HTTPS:** https://localhost:5001
 - **Swagger UI:** http://localhost:5000/swagger (Development only)
 
-## Code Conventions
-
-### MFF-BAS Compliant Endpoint Pattern
-
-```csharp
-// ID01: English, ID02: Versioned, ID10: Status codes, ID13: ISO 8601
-app.MapGet("/api/v1/example", () =>
-{
-    return Results.Ok(new ExampleResponse(
-        Data: "value",
-        Timestamp: DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ")
-    ));
-})
-.WithName("GetExample")
-.WithOpenApi(op =>
-{
-    op.Summary = "Example endpoint";
-    op.Description = "Detailed description in English";
-    return op;
-})
-.Produces<ExampleResponse>(StatusCodes.Status200OK)
-.Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
-.Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
-```
-
-### Adding Protected Endpoints
-
-```csharp
-app.MapGet("/api/v1/protected", (HttpContext ctx) =>
-{
-    var userId = ctx.User.FindFirst("oid")?.Value;
-    return Results.Ok(new { UserId = userId });
-})
-.RequireAuthorization()
-.Produces<object>(StatusCodes.Status200OK)
-.Produces<ProblemDetails>(StatusCodes.Status401Unauthorized)
-.Produces<ProblemDetails>(StatusCodes.Status403Forbidden);
-```
-
-### String Definitions (ID14)
-
-Always define string constraints:
-```csharp
-// In JSON Schema / validation
-minLength: 1
-maxLength: 100
-```
-
 ## HTTP Headers (ID20)
 
 ### Supported Custom Headers
@@ -216,28 +349,6 @@ maxLength: 100
 | X-Correlation-ID | Request/Response | No | Correlate requests across services |
 | X-Request-ID | Request | No | Unique request identifier |
 | Authorization | Request | Conditional | Bearer token for protected endpoints |
-
-## Configuration
-
-### appsettings.json
-
-```json
-{
-  "AzureAd": {
-    "Instance": "https://login.microsoftonline.com/",
-    "TenantId": "YOUR_TENANT_ID",
-    "ClientId": "YOUR_CLIENT_ID",
-    "Audience": "api://YOUR_CLIENT_ID"
-  },
-  "Logging": {
-    "LogLevel": {
-      "Default": "Information",
-      "Microsoft.AspNetCore": "Warning"
-    }
-  },
-  "AllowedHosts": "*"
-}
-```
 
 ## AI Assistant Guidelines
 
@@ -256,6 +367,13 @@ When adding or modifying endpoints:
 9. **ID20** - Support X-Correlation-ID header
 10. **ID23** - Export OpenAPI spec in JSON format
 
+### Adding New Endpoints
+
+1. Create model in `Models/` folder
+2. Create endpoint file in `Endpoints/` folder with extension method
+3. Register in `Program.cs` with `app.MapXxxEndpoints()`
+4. Follow existing patterns for pagination, error handling, and OpenAPI docs
+
 ### Things to Avoid
 
 - Don't use Dutch in API definitions (ID01)
@@ -263,13 +381,6 @@ When adding or modifying endpoints:
 - Don't use DateTime without UTC conversion (ID13)
 - Don't skip status code definitions (ID10)
 - Don't commit secrets or tenant IDs
-
-## Testing
-
-```bash
-dotnet new xunit -o tests/ApiAutomation.Api.Tests
-dotnet sln add tests/ApiAutomation.Api.Tests
-```
 
 ## Branch Naming Convention
 
