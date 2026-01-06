@@ -5,199 +5,186 @@ This document provides context and guidelines for AI assistants working on this 
 ## Project Overview
 
 **Repository:** api-automation
-**Status:** New/Initial Setup
-**Purpose:** API automation testing and integration framework
-
-This repository is intended for automating API testing, integration workflows, and related automation tasks.
+**Framework:** .NET 8 (Minimal API)
+**Language:** C#
+**Purpose:** API automation and integration framework
 
 ## Repository Structure
 
 ```
 api-automation/
-├── CLAUDE.md          # AI assistant guidelines (this file)
-└── (awaiting initial structure setup)
+├── ApiAutomation.sln                      # Solution file
+├── src/
+│   └── ApiAutomation.Api/                 # Main API project
+│       ├── ApiAutomation.Api.csproj       # Project file
+│       ├── Program.cs                     # Application entry point & endpoints
+│       ├── appsettings.json               # Configuration
+│       └── appsettings.Development.json   # Development configuration
+├── .gitignore                             # Git ignore rules
+└── CLAUDE.md                              # This file
 ```
 
-### Planned Directory Structure
+## Tech Stack
 
-When setting up this project, consider the following structure:
+- **.NET 8** - Latest LTS framework
+- **Minimal API** - Lightweight endpoint configuration
+- **Swagger/OpenAPI** - API documentation (enabled in Development)
 
-```
-api-automation/
-├── src/                    # Source code
-│   ├── clients/           # API client implementations
-│   ├── utils/             # Utility functions
-│   └── config/            # Configuration management
-├── tests/                  # Test files
-│   ├── unit/              # Unit tests
-│   ├── integration/       # Integration tests
-│   └── e2e/               # End-to-end tests
-├── config/                 # Configuration files
-├── docs/                   # Documentation
-├── scripts/                # Utility scripts
-├── .github/               # GitHub workflows and templates
-│   └── workflows/         # CI/CD workflows
-├── package.json           # Node.js dependencies (if applicable)
-├── requirements.txt       # Python dependencies (if applicable)
-├── README.md              # Project documentation
-└── CLAUDE.md              # This file
+## API Endpoints
+
+| Method | Endpoint      | Description           | Response          |
+|--------|---------------|-----------------------|-------------------|
+| GET    | `/api/health` | Health check endpoint | `HealthResponse`  |
+
+### Response Models
+
+```csharp
+public record HealthResponse(string Status, DateTime Timestamp, string Version);
 ```
 
 ## Development Workflow
 
+### Prerequisites
+
+- .NET 8 SDK
+
 ### Getting Started
 
-1. Clone the repository
-2. Install dependencies (language-specific)
-3. Configure environment variables
-4. Run tests to verify setup
+```bash
+# Clone the repository
+git clone <repository-url>
+cd api-automation
 
-### Branch Naming Convention
+# Restore dependencies
+dotnet restore
 
-- Feature branches: `feature/<description>`
-- Bug fixes: `fix/<description>`
-- Improvements: `improve/<description>`
-- Claude AI branches: `claude/<session-id>`
+# Run the API
+dotnet run --project src/ApiAutomation.Api
 
-### Commit Message Format
-
-Use clear, descriptive commit messages:
-```
-<type>: <short description>
-
-[optional body with more details]
+# Or run with hot reload
+dotnet watch --project src/ApiAutomation.Api
 ```
 
-Types: `feat`, `fix`, `docs`, `test`, `refactor`, `chore`
+### Build Commands
 
-## Key Conventions
+```bash
+# Build solution
+dotnet build
 
-### Code Style
+# Run tests (when added)
+dotnet test
 
-- Follow consistent naming conventions
-- Write self-documenting code with clear variable/function names
-- Include comments only where logic isn't self-evident
-- Keep functions focused and single-purpose
+# Publish for production
+dotnet publish -c Release
+```
 
-### API Client Design
+### Default URLs
 
-When implementing API clients:
-- Use consistent error handling patterns
-- Implement retry logic with exponential backoff
-- Support configurable timeouts
-- Log requests/responses appropriately
-- Handle authentication securely
+- **HTTP:** http://localhost:5000
+- **HTTPS:** https://localhost:5001
+- **Swagger UI:** https://localhost:5001/swagger (Development only)
 
-### Testing Standards
+## Code Conventions
 
-- Write tests for all new functionality
-- Maintain high test coverage
-- Use descriptive test names
-- Follow Arrange-Act-Assert pattern
-- Mock external dependencies appropriately
+### C# Style Guidelines
 
-### Configuration Management
+- Use `record` types for DTOs and response models
+- Use Minimal API pattern for endpoints
+- Enable nullable reference types
+- Use implicit usings
 
-- Never commit secrets or credentials
-- Use environment variables for sensitive data
-- Support multiple environments (dev, staging, prod)
-- Document all configuration options
+### Adding New Endpoints
+
+Add endpoints in `Program.cs` using the Minimal API pattern:
+
+```csharp
+app.MapGet("/api/example", () => new { Message = "Hello" })
+   .WithName("GetExample")
+   .WithOpenApi();
+```
+
+### Project Organization
+
+When the project grows, consider:
+- `Models/` - Request/Response DTOs
+- `Services/` - Business logic
+- `Endpoints/` - Endpoint definitions (using Carter or manual grouping)
+
+## Configuration
+
+### appsettings.json
+
+Configuration follows standard ASP.NET Core patterns:
+
+```json
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*"
+}
+```
+
+### Environment Variables
+
+Standard ASP.NET Core environment variables apply:
+- `ASPNETCORE_ENVIRONMENT` - Development/Staging/Production
+- `ASPNETCORE_URLS` - Override default URLs
 
 ## AI Assistant Guidelines
 
 ### When Working on This Repository
 
 1. **Read before modifying**: Always read existing code before making changes
-2. **Follow existing patterns**: Match the style and conventions already in use
-3. **Keep changes focused**: Make only the changes requested
-4. **Avoid over-engineering**: Simple solutions are preferred
-5. **Security first**: Never introduce vulnerabilities
+2. **Follow Minimal API patterns**: Keep endpoints in `Program.cs` or use endpoint grouping
+3. **Use records for DTOs**: Prefer `record` over `class` for data transfer objects
+4. **Keep it simple**: Minimal API is meant to be lightweight
+5. **Add OpenAPI metadata**: Use `.WithName()` and `.WithOpenApi()` for documentation
 
 ### Common Tasks
 
-#### Adding a New API Client
-1. Create client file in `src/clients/`
-2. Implement standard interface
-3. Add configuration options
-4. Write unit tests
-5. Add integration tests
-6. Update documentation
+#### Adding a New Endpoint
+1. Add the endpoint mapping in `Program.cs`
+2. Create response/request records if needed
+3. Add `.WithName()` and `.WithOpenApi()` for Swagger
+4. Test the endpoint
 
-#### Adding Tests
-1. Follow existing test structure
-2. Use descriptive test names
-3. Cover edge cases
-4. Mock external services
-
-#### Debugging Issues
-1. Check logs first
-2. Review recent changes
-3. Write a failing test to reproduce
-4. Fix and verify with test
+#### Adding a Service
+1. Create service interface and implementation
+2. Register in DI: `builder.Services.AddScoped<IMyService, MyService>()`
+3. Inject into endpoints
 
 ### Things to Avoid
 
-- Don't commit credentials or secrets
-- Don't add unnecessary dependencies
-- Don't make unrelated changes in the same commit
-- Don't skip tests
-- Don't hardcode configuration values
+- Don't add unnecessary abstractions for simple endpoints
+- Don't commit `appsettings.local.json` or secrets
+- Don't skip OpenAPI metadata on public endpoints
 
-## Environment Setup
+## Testing
 
-### Required Environment Variables
+Tests should be added in a separate test project:
 
-Document environment variables as they are added:
 ```bash
-# API_BASE_URL=https://api.example.com
-# API_KEY=<your-api-key>
-# LOG_LEVEL=info
+# Create test project (when needed)
+dotnet new xunit -o tests/ApiAutomation.Api.Tests
+dotnet sln add tests/ApiAutomation.Api.Tests
 ```
 
-### Local Development
+## Branch Naming Convention
 
-Instructions for local development will be added as the project matures.
+- Feature branches: `feature/<description>`
+- Bug fixes: `fix/<description>`
+- Claude AI branches: `claude/<session-id>`
 
-## Dependencies
+## Commit Message Format
 
-### Core Dependencies
-(To be added as the project develops)
+```
+<type>: <short description>
 
-### Development Dependencies
-(To be added as the project develops)
-
-## Scripts and Commands
-
-Document available scripts/commands here:
-```bash
-# npm run test       # Run tests (Node.js)
-# npm run lint       # Run linter
-# pytest             # Run tests (Python)
+[optional body]
 ```
 
-## CI/CD
-
-Continuous integration workflows will be configured in `.github/workflows/`.
-
-## Troubleshooting
-
-### Common Issues
-
-Document common issues and solutions as they are discovered.
-
-## Contributing
-
-1. Create a feature branch
-2. Make changes
-3. Write/update tests
-4. Submit pull request
-5. Address review feedback
-
-## Resources
-
-- [API Documentation](link-to-docs) (add when available)
-- [Internal Wiki](link-to-wiki) (add when available)
-
----
-
-*This CLAUDE.md was initialized for a new repository. Update this file as the project evolves to keep AI assistants informed of current conventions and structure.*
+Types: `feat`, `fix`, `docs`, `test`, `refactor`, `chore`
