@@ -9,16 +9,21 @@ This document provides context and guidelines for AI assistants working on this 
 **Language:** C#
 **Purpose:** API automation and integration framework
 **Authentication:** Microsoft Entra ID (Azure AD)
+**API Standards:** MFF-BAS API Ontwerprichtlijnen v5.0
 
 ## Repository Structure
 
 ```
 api-automation/
 ├── ApiAutomation.sln                      # Solution file
+├── Guides/
+│   └── MFF-BAS-API-Ontwerprichtlijnen-v5.0.pdf  # API design guidelines
 ├── src/
 │   └── ApiAutomation.Api/                 # Main API project
 │       ├── ApiAutomation.Api.csproj       # Project file
 │       ├── Program.cs                     # Application entry point & endpoints
+│       ├── Properties/
+│       │   └── launchSettings.json        # Development launch settings
 │       ├── appsettings.json               # Configuration (includes AzureAd settings)
 │       └── appsettings.Development.json   # Development configuration
 ├── .gitignore                             # Git ignore rules
@@ -29,28 +34,57 @@ api-automation/
 
 - **.NET 8** - Latest LTS framework
 - **Minimal API** - Lightweight endpoint configuration
-- **Microsoft.Identity.Web** - Entra ID authentication
-- **Swagger/OpenAPI** - API documentation (enabled in Development)
+- **Microsoft.Identity.Web** - Entra ID authentication (OAuth 2.0)
+- **Swagger/OpenAPI 3.0** - API documentation (JSON format)
+
+## MFF-BAS API Guidelines Applied
+
+This API follows the MFF-BAS API Ontwerprichtlijnen v5.0. Key guidelines implemented:
+
+| ID | Guideline | Implementation |
+|----|-----------|----------------|
+| ID01 | API definition in UK-English | All resources and attributes in English |
+| ID02 | Version management | Versioned endpoints `/api/v1/...` |
+| ID05 | RFC 7807 error responses | `ProblemDetails` for all errors |
+| ID07 | OpenAPI Info object | Title, description, version, x-releaseDate, contact, license |
+| ID10 | HTTP status codes | Proper codes per endpoint (200, 400, 401, 403, 500, 503) |
+| ID13 | ISO 8601 date/time | UTC format: `yyyy-MM-ddTHH:mm:ss.fffZ` |
+| ID15 | OAuth 2.0 authorization | Microsoft Entra ID with JWT Bearer tokens |
+| ID20 | HTTP headers | X-Correlation-ID, X-Request-ID support |
+| ID23 | OpenAPI Specification | OAS 3.0 in JSON format |
 
 ## API Endpoints
 
-| Method | Endpoint      | Auth Required | Description           | Response          |
-|--------|---------------|---------------|-----------------------|-------------------|
-| GET    | `/api/health` | No            | Health check endpoint | `HealthResponse`  |
-| GET    | `/api/secure` | Yes           | Protected endpoint    | `SecureResponse`  |
+| Method | Endpoint | Auth | Description | Response |
+|--------|----------|------|-------------|----------|
+| GET | `/api/v1/health` | No | Health check endpoint | `HealthResponse` |
+| GET | `/api/v1/secure` | Yes | Protected endpoint | `SecureResponse` |
 
 ### Response Models
 
 ```csharp
-public record HealthResponse(string Status, DateTime Timestamp, string Version);
-public record SecureResponse(string Message, string UserName, string ObjectId, DateTime Timestamp);
+public record HealthResponse(string Status, string Timestamp, string Version);
+public record SecureResponse(string Message, string UserName, string ObjectId, string Timestamp);
+```
+
+### Error Responses (RFC 7807)
+
+All errors return `ProblemDetails`:
+```json
+{
+  "type": "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+  "title": "Bad Request",
+  "status": 400,
+  "detail": "Validation error details",
+  "instance": "/api/v1/endpoint"
+}
 ```
 
 ## Authentication
 
-### Microsoft Entra ID (Azure AD)
+### Microsoft Entra ID (Azure AD) - ID15
 
-This API uses Microsoft Entra ID for authentication with JWT Bearer tokens.
+This API uses OAuth 2.0 with Microsoft Entra ID for authentication.
 
 ### Azure Configuration Required
 
@@ -62,7 +96,6 @@ This API uses Microsoft Entra ID for authentication with JWT Bearer tokens.
 2. **Configure the API:**
    - Go to "Expose an API"
    - Set Application ID URI (e.g., `api://YOUR_CLIENT_ID`)
-   - Add scopes if needed
 
 3. **Update appsettings.json:**
 ```json
@@ -78,10 +111,7 @@ This API uses Microsoft Entra ID for authentication with JWT Bearer tokens.
 
 ### Getting a Token
 
-Use Azure CLI, MSAL, or any OAuth2 client:
-
 ```bash
-# Using Azure CLI
 az login
 az account get-access-token --resource api://YOUR_CLIENT_ID
 ```
@@ -89,20 +119,9 @@ az account get-access-token --resource api://YOUR_CLIENT_ID
 ### Calling Protected Endpoints
 
 ```bash
-curl -H "Authorization: Bearer YOUR_TOKEN" https://localhost:5001/api/secure
-```
-
-### Adding Authorization to New Endpoints
-
-```csharp
-// Public endpoint
-app.MapGet("/api/public", () => "Hello")
-   .WithOpenApi();
-
-// Protected endpoint
-app.MapGet("/api/protected", () => "Secret")
-   .RequireAuthorization()
-   .WithOpenApi();
+curl -H "Authorization: Bearer YOUR_TOKEN" \
+     -H "X-Correlation-ID: $(uuidgen)" \
+     https://localhost:5001/api/v1/secure
 ```
 
 ## Development Workflow
@@ -115,76 +134,88 @@ app.MapGet("/api/protected", () => "Secret")
 ### Getting Started
 
 ```bash
-# Clone the repository
+# Clone and restore
 git clone <repository-url>
 cd api-automation
-
-# Restore dependencies
 dotnet restore
 
-# Configure AzureAd settings in appsettings.json
+# Configure AzureAd in appsettings.json
 
-# Run the API
-dotnet run --project src/ApiAutomation.Api
-
-# Or run with hot reload
+# Run in Development mode (enables Swagger)
 dotnet watch --project src/ApiAutomation.Api
 ```
 
 ### Build Commands
 
 ```bash
-# Build solution
-dotnet build
-
-# Run tests (when added)
-dotnet test
-
-# Publish for production
-dotnet publish -c Release
+dotnet build              # Build solution
+dotnet test               # Run tests
+dotnet publish -c Release # Publish for production
 ```
 
 ### Default URLs
 
 - **HTTP:** http://localhost:5000
 - **HTTPS:** https://localhost:5001
-- **Swagger UI:** https://localhost:5001/swagger (Development only)
+- **Swagger UI:** http://localhost:5000/swagger (Development only)
 
 ## Code Conventions
 
-### C# Style Guidelines
-
-- Use `record` types for DTOs and response models
-- Use Minimal API pattern for endpoints
-- Enable nullable reference types
-- Use implicit usings
-
-### Adding New Endpoints
-
-Add endpoints in `Program.cs` using the Minimal API pattern:
+### MFF-BAS Compliant Endpoint Pattern
 
 ```csharp
-app.MapGet("/api/example", () => new { Message = "Hello" })
-   .WithName("GetExample")
-   .WithOpenApi();
-
-// With authentication
-app.MapGet("/api/secure-example", (HttpContext ctx) =>
+// ID01: English, ID02: Versioned, ID10: Status codes, ID13: ISO 8601
+app.MapGet("/api/v1/example", () =>
 {
-    var userId = ctx.User.FindFirst("oid")?.Value;
-    return new { UserId = userId };
+    return Results.Ok(new ExampleResponse(
+        Data: "value",
+        Timestamp: DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ")
+    ));
 })
-.RequireAuthorization()
-.WithName("GetSecureExample")
-.WithOpenApi();
+.WithName("GetExample")
+.WithOpenApi(op =>
+{
+    op.Summary = "Example endpoint";
+    op.Description = "Detailed description in English";
+    return op;
+})
+.Produces<ExampleResponse>(StatusCodes.Status200OK)
+.Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
+.Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
 ```
 
-### Project Organization
+### Adding Protected Endpoints
 
-When the project grows, consider:
-- `Models/` - Request/Response DTOs
-- `Services/` - Business logic
-- `Endpoints/` - Endpoint definitions (using Carter or manual grouping)
+```csharp
+app.MapGet("/api/v1/protected", (HttpContext ctx) =>
+{
+    var userId = ctx.User.FindFirst("oid")?.Value;
+    return Results.Ok(new { UserId = userId });
+})
+.RequireAuthorization()
+.Produces<object>(StatusCodes.Status200OK)
+.Produces<ProblemDetails>(StatusCodes.Status401Unauthorized)
+.Produces<ProblemDetails>(StatusCodes.Status403Forbidden);
+```
+
+### String Definitions (ID14)
+
+Always define string constraints:
+```csharp
+// In JSON Schema / validation
+minLength: 1
+maxLength: 100
+```
+
+## HTTP Headers (ID20)
+
+### Supported Custom Headers
+
+| Header | Direction | Required | Description |
+|--------|-----------|----------|-------------|
+| X-Correlation-ID | Request/Response | No | Correlate requests across services |
+| X-Request-ID | Request | No | Unique request identifier |
+| Authorization | Request | Conditional | Bearer token for protected endpoints |
 
 ## Configuration
 
@@ -208,52 +239,34 @@ When the project grows, consider:
 }
 ```
 
-### Environment Variables
-
-Standard ASP.NET Core environment variables apply:
-- `ASPNETCORE_ENVIRONMENT` - Development/Staging/Production
-- `ASPNETCORE_URLS` - Override default URLs
-- `AzureAd__TenantId` - Override tenant ID
-- `AzureAd__ClientId` - Override client ID
-
 ## AI Assistant Guidelines
 
-### When Working on This Repository
+### MFF-BAS Compliance Checklist
 
-1. **Read before modifying**: Always read existing code before making changes
-2. **Follow Minimal API patterns**: Keep endpoints in `Program.cs` or use endpoint grouping
-3. **Use records for DTOs**: Prefer `record` over `class` for data transfer objects
-4. **Keep it simple**: Minimal API is meant to be lightweight
-5. **Add OpenAPI metadata**: Use `.WithName()` and `.WithOpenApi()` for documentation
-6. **Consider authentication**: Use `.RequireAuthorization()` for protected endpoints
+When adding or modifying endpoints:
 
-### Common Tasks
-
-#### Adding a New Endpoint
-1. Add the endpoint mapping in `Program.cs`
-2. Create response/request records if needed
-3. Add `.WithName()` and `.WithOpenApi()` for Swagger
-4. Add `.RequireAuthorization()` if authentication is needed
-5. Test the endpoint
-
-#### Adding a Service
-1. Create service interface and implementation
-2. Register in DI: `builder.Services.AddScoped<IMyService, MyService>()`
-3. Inject into endpoints
+1. **ID01** - Use UK-English for all API definitions
+2. **ID02** - Include version in URL path (`/api/v1/...`)
+3. **ID05** - Return `ProblemDetails` for errors (RFC 7807)
+4. **ID07** - Ensure OpenAPI Info object is complete
+5. **ID10** - Define all applicable HTTP status codes
+6. **ID13** - Use ISO 8601 UTC format for timestamps
+7. **ID14** - Define minLength/maxLength for strings
+8. **ID15** - Use OAuth 2.0 / Entra ID for auth
+9. **ID20** - Support X-Correlation-ID header
+10. **ID23** - Export OpenAPI spec in JSON format
 
 ### Things to Avoid
 
-- Don't add unnecessary abstractions for simple endpoints
-- Don't commit `appsettings.local.json` or secrets
-- Don't skip OpenAPI metadata on public endpoints
-- Don't hardcode tenant/client IDs - use configuration
+- Don't use Dutch in API definitions (ID01)
+- Don't return plain text errors (ID05)
+- Don't use DateTime without UTC conversion (ID13)
+- Don't skip status code definitions (ID10)
+- Don't commit secrets or tenant IDs
 
 ## Testing
 
-Tests should be added in a separate test project:
-
 ```bash
-# Create test project (when needed)
 dotnet new xunit -o tests/ApiAutomation.Api.Tests
 dotnet sln add tests/ApiAutomation.Api.Tests
 ```
@@ -273,3 +286,10 @@ dotnet sln add tests/ApiAutomation.Api.Tests
 ```
 
 Types: `feat`, `fix`, `docs`, `test`, `refactor`, `chore`
+
+## References
+
+- [MFF-BAS API Ontwerprichtlijnen v5.0](Guides/MFF-BAS-API-Ontwerprichtlijnen-v5.0.pdf)
+- [API Strategie Nederlandse Overheid](https://docs.geostandaarden.nl/api/API-Strategie/)
+- [RFC 7807 - Problem Details](https://www.rfc-editor.org/rfc/rfc7807)
+- [OpenAPI Specification](https://www.openapis.org/)
