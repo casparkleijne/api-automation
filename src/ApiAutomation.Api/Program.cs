@@ -183,22 +183,29 @@ public class CustomHeadersOperationFilter : Swashbuckle.AspNetCore.SwaggerGen.IO
     {
         operation.Parameters ??= new List<OpenApiParameter>();
 
-        operation.Parameters.Add(new OpenApiParameter
+        // Only add if not already present
+        if (!operation.Parameters.Any(p => p.Name == "X-Correlation-ID"))
         {
-            Name = "X-Correlation-ID",
-            In = ParameterLocation.Header,
-            Required = false,
-            Description = "Unique identifier for correlating requests across services",
-            Schema = new OpenApiSchema { Type = "string", Format = "uuid" }
-        });
+            operation.Parameters.Add(new OpenApiParameter
+            {
+                Name = "X-Correlation-ID",
+                In = ParameterLocation.Header,
+                Required = false,
+                Description = "Unique identifier for correlating requests across services",
+                Schema = new OpenApiSchema { Type = "string", Format = "uuid" }
+            });
+        }
 
-        operation.Parameters.Add(new OpenApiParameter
+        if (!operation.Parameters.Any(p => p.Name == "X-Request-ID"))
         {
-            Name = "X-Request-ID",
-            In = ParameterLocation.Header,
-            Required = false,
-            Description = "Unique identifier for this request",
-            Schema = new OpenApiSchema { Type = "string", Format = "uuid" }
-        });
+            operation.Parameters.Add(new OpenApiParameter
+            {
+                Name = "X-Request-ID",
+                In = ParameterLocation.Header,
+                Required = false,
+                Description = "Unique identifier for this request",
+                Schema = new OpenApiSchema { Type = "string", Format = "uuid" }
+            });
+        }
     }
 }
