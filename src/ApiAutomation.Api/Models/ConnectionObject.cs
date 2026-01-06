@@ -6,55 +6,104 @@ namespace ApiAutomation.Api.Models;
 public record ConnectionObject(
     /// <summary>Unique identifier</summary>
     Guid Id,
-    /// <summary>EAN code for the connection</summary>
-    string? Ean,
-    /// <summary>Postal code</summary>
-    string? PostalCode,
-    /// <summary>House number</summary>
-    int? HouseNumber,
-    /// <summary>House number addition</summary>
-    string? HouseNumberAddition,
-    /// <summary>Street name</summary>
-    string? Street,
-    /// <summary>City name</summary>
-    string? City,
-    /// <summary>Country code (ISO 3166-1 alpha-2)</summary>
-    string? Country,
-    /// <summary>Connection status</summary>
-    string? Status,
-    /// <summary>Associated grid operator ID</summary>
-    Guid? GridOperatorId,
-    /// <summary>Creation timestamp in ISO 8601 UTC format</summary>
-    string CreatedAt,
-    /// <summary>Last modification timestamp in ISO 8601 UTC format</summary>
-    string? ModifiedAt
+    /// <summary>Name of the connection object</summary>
+    string? Name,
+    /// <summary>Description of the connection object</summary>
+    string? Description,
+    /// <summary>Connection object code</summary>
+    string? Code,
+    /// <summary>Priority for ordering</summary>
+    int? Priority,
+    /// <summary>Profile type (e.g., residential, commercial)</summary>
+    int? ProfileType,
+    /// <summary>Address type</summary>
+    int? AddressType,
+    /// <summary>Whether the connection object is active</summary>
+    bool IsActive,
+    /// <summary>Start date in ISO 8601 format</summary>
+    string StartDate,
+    /// <summary>End date in ISO 8601 format</summary>
+    string EndDate
 );
 
 /// <summary>
 /// Request model for creating a connection object
 /// </summary>
 public record CreateConnectionObjectRequest(
-    string? Ean,
-    string PostalCode,
-    int HouseNumber,
-    string? HouseNumberAddition,
-    string? Street,
-    string? City,
-    string? Country,
-    Guid? GridOperatorId
+    string? Name,
+    string? Description,
+    string? Code,
+    int? Priority,
+    int? ProfileType,
+    int? AddressType,
+    string StartDate,
+    string EndDate
 );
 
 /// <summary>
 /// Request model for updating a connection object
 /// </summary>
 public record UpdateConnectionObjectRequest(
-    string? Ean,
-    string? PostalCode,
-    int? HouseNumber,
-    string? HouseNumberAddition,
-    string? Street,
-    string? City,
-    string? Country,
-    string? Status,
-    Guid? GridOperatorId
+    string? Name,
+    string? Description,
+    string? Code,
+    int? Priority,
+    int? ProfileType,
+    int? AddressType,
+    bool? IsActive,
+    string? StartDate,
+    string? EndDate
+);
+
+/// <summary>
+/// Represents a link between connection objects and products
+/// </summary>
+public record ConnectionObjectProduct(
+    Guid Id,
+    Guid ConnectionObjectId,
+    Guid ProductId,
+    bool IsActive,
+    string StartDate,
+    string EndDate
+);
+
+/// <summary>
+/// Represents user type settings for a connection object
+/// </summary>
+public record ConnectionObjectUserType(
+    Guid Id,
+    Guid ConnectionObjectId,
+    string? UserType,
+    bool IsActive,
+    string StartDate,
+    string EndDate
+);
+
+/// <summary>
+/// Represents grid operator settings for a connection object
+/// </summary>
+public record ConnectionObjectGridOperatorSetting(
+    Guid Id,
+    Guid ConnectionObjectId,
+    Guid? GridOperatorId,
+    string? SettingKey,
+    string? SettingValue,
+    bool IsActive,
+    string StartDate,
+    string EndDate
+);
+
+/// <summary>
+/// Represents a process variant for a connection object
+/// </summary>
+public record ConnectionObjectProcessVariant(
+    Guid Id,
+    Guid ConnectionObjectId,
+    Guid? ProcessVariantId,
+    string? Name,
+    string? Description,
+    int? Priority,
+    bool IsActive,
+    string StartDate,
+    string EndDate
 );

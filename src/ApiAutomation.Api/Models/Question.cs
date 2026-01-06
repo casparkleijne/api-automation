@@ -6,105 +6,219 @@ namespace ApiAutomation.Api.Models;
 public record Question(
     /// <summary>Unique identifier</summary>
     Guid Id,
+    /// <summary>Question name</summary>
+    string? Name,
+    /// <summary>Description of the question</summary>
+    string? Description,
+    /// <summary>Website link for more information</summary>
+    string? WebsiteLink,
+    /// <summary>Website link text</summary>
+    string? WebsiteText,
+    /// <summary>Placeholder text for input</summary>
+    string? Placeholder,
     /// <summary>Question code</summary>
-    string Code,
+    string? Code,
+    /// <summary>Priority for ordering</summary>
+    int? Priority,
+    /// <summary>Question title for display</summary>
+    string? QuestionTitle,
     /// <summary>Question text</summary>
-    string Text,
-    /// <summary>Help text for the question</summary>
-    string? HelpText,
-    /// <summary>Question type (text, number, select, multiselect, date, boolean)</summary>
-    string QuestionType,
-    /// <summary>Whether the question is required</summary>
-    bool IsRequired,
-    /// <summary>Display order</summary>
-    int DisplayOrder,
-    /// <summary>Associated product ID</summary>
-    Guid? ProductId,
-    /// <summary>Associated service ID</summary>
-    Guid? ServiceId,
+    string? QuestionText,
+    /// <summary>Result format specification</summary>
+    string? ResultFormat,
+    /// <summary>Whether the question has an action</summary>
+    bool HasAction,
+    /// <summary>Whether the question is enabled</summary>
+    bool IsEnabled,
+    /// <summary>Answer handler type</summary>
+    int? AnswerHandler,
+    /// <summary>Whether the question is mandatory</summary>
+    bool IsMandatory,
+    /// <summary>Answer type ID</summary>
+    Guid? AnswerTypeId,
+    /// <summary>Show for addressable objects</summary>
+    bool ShowForAddressableObjects,
+    /// <summary>Show for non-addressable objects</summary>
+    bool ShowForNonAddressableObjects,
+    /// <summary>Show for addressable objects only</summary>
+    bool ShowForAddressableObjectsOnly,
+    /// <summary>Question request type ID</summary>
+    Guid? QuestionRequestTypeId,
     /// <summary>Whether the question is active</summary>
     bool IsActive,
-    /// <summary>Creation timestamp in ISO 8601 UTC format</summary>
-    string CreatedAt,
-    /// <summary>Last modification timestamp in ISO 8601 UTC format</summary>
-    string? ModifiedAt
+    /// <summary>Start date in ISO 8601 format</summary>
+    string StartDate,
+    /// <summary>End date in ISO 8601 format</summary>
+    string EndDate
 );
 
 /// <summary>
-/// Represents an answer (Antwoord) option for a question
+/// Represents an answer type for questions
 /// </summary>
-public record Answer(
+public record AnswerType(
     /// <summary>Unique identifier</summary>
     Guid Id,
-    /// <summary>Answer code</summary>
-    string Code,
-    /// <summary>Answer text</summary>
-    string Text,
-    /// <summary>Description of the answer</summary>
+    /// <summary>Answer type name</summary>
+    string? Name,
+    /// <summary>Description of the answer type</summary>
     string? Description,
-    /// <summary>Associated question ID</summary>
-    Guid QuestionId,
-    /// <summary>Display order</summary>
-    int DisplayOrder,
-    /// <summary>Whether this is the default answer</summary>
-    bool IsDefault,
-    /// <summary>Whether the answer is active</summary>
-    bool IsActive,
-    /// <summary>Creation timestamp in ISO 8601 UTC format</summary>
-    string CreatedAt,
-    /// <summary>Last modification timestamp in ISO 8601 UTC format</summary>
-    string? ModifiedAt
+    /// <summary>Whether the answer is quantifiable</summary>
+    bool IsQuantifiable,
+    /// <summary>Whether the answer type is enabled</summary>
+    bool IsEnabled,
+    /// <summary>Whether the answer is processable</summary>
+    bool IsProcessable
 );
 
 /// <summary>
 /// Request model for creating a question
 /// </summary>
 public record CreateQuestionRequest(
-    string Code,
-    string Text,
-    string? HelpText,
-    string QuestionType,
-    bool IsRequired,
-    int DisplayOrder,
-    Guid? ProductId,
-    Guid? ServiceId
+    string? Name,
+    string? Description,
+    string? WebsiteLink,
+    string? WebsiteText,
+    string? Placeholder,
+    string? Code,
+    int? Priority,
+    string? QuestionTitle,
+    string? QuestionText,
+    string? ResultFormat,
+    bool HasAction,
+    bool IsEnabled,
+    int? AnswerHandler,
+    bool IsMandatory,
+    Guid? AnswerTypeId,
+    bool ShowForAddressableObjects,
+    bool ShowForNonAddressableObjects,
+    bool ShowForAddressableObjectsOnly,
+    Guid? QuestionRequestTypeId,
+    string StartDate,
+    string EndDate
 );
 
 /// <summary>
 /// Request model for updating a question
 /// </summary>
 public record UpdateQuestionRequest(
+    string? Name,
+    string? Description,
+    string? WebsiteLink,
+    string? WebsiteText,
+    string? Placeholder,
     string? Code,
-    string? Text,
-    string? HelpText,
-    string? QuestionType,
-    bool? IsRequired,
-    int? DisplayOrder,
-    Guid? ProductId,
-    Guid? ServiceId,
-    bool? IsActive
+    int? Priority,
+    string? QuestionTitle,
+    string? QuestionText,
+    string? ResultFormat,
+    bool? HasAction,
+    bool? IsEnabled,
+    int? AnswerHandler,
+    bool? IsMandatory,
+    Guid? AnswerTypeId,
+    bool? ShowForAddressableObjects,
+    bool? ShowForNonAddressableObjects,
+    bool? ShowForAddressableObjectsOnly,
+    Guid? QuestionRequestTypeId,
+    bool? IsActive,
+    string? StartDate,
+    string? EndDate
 );
 
 /// <summary>
-/// Request model for creating an answer
+/// Request model for creating an answer type
 /// </summary>
-public record CreateAnswerRequest(
-    string Code,
-    string Text,
+public record CreateAnswerTypeRequest(
+    string? Name,
     string? Description,
-    Guid QuestionId,
-    int DisplayOrder,
-    bool IsDefault
+    bool IsQuantifiable,
+    bool IsEnabled,
+    bool IsProcessable
 );
 
 /// <summary>
-/// Request model for updating an answer
+/// Request model for updating an answer type
 /// </summary>
-public record UpdateAnswerRequest(
-    string? Code,
-    string? Text,
+public record UpdateAnswerTypeRequest(
+    string? Name,
     string? Description,
-    int? DisplayOrder,
-    bool? IsDefault,
-    bool? IsActive
+    bool? IsQuantifiable,
+    bool? IsEnabled,
+    bool? IsProcessable
+);
+
+/// <summary>
+/// Represents question information/help text
+/// </summary>
+public record QuestionInfo(
+    Guid Id,
+    string? InfoTitle,
+    string? InfoText,
+    bool IsActive,
+    string StartDate,
+    string EndDate
+);
+
+/// <summary>
+/// Represents an action for a question based on conditions
+/// </summary>
+public record QuestionAction(
+    Guid Id,
+    Guid? QuestionId,
+    Guid? ActionConditionId,
+    string? AnswerResult,
+    Guid? QuestionInfoId,
+    int? QuestionInfoPositionId,
+    Guid? ProcessVariantId,
+    int? MinimalWaitTime,
+    bool IsRelative,
+    bool IsActive,
+    string StartDate,
+    string EndDate
+);
+
+/// <summary>
+/// Represents a condition for triggering actions
+/// </summary>
+public record ActionCondition(
+    Guid Id,
+    string? Name,
+    string? Description,
+    string? ConditionType,
+    string? ConditionValue,
+    bool IsActive,
+    string StartDate,
+    string EndDate
+);
+
+/// <summary>
+/// Represents a relation between questions
+/// </summary>
+public record QuestionRelation(
+    Guid Id,
+    string? PrimaryRelationType,
+    string? SecondaryRelationType,
+    Guid? QuestionId,
+    Guid? GridOperatorId,
+    Guid? PrimaryRelationId,
+    Guid? SecondaryRelationId,
+    string? Name,
+    string? Description,
+    int? Priority,
+    bool EanCheck,
+    bool IsActive,
+    string StartDate,
+    string EndDate
+);
+
+/// <summary>
+/// Represents a question request type
+/// </summary>
+public record QuestionRequestType(
+    Guid Id,
+    string? Name,
+    string? Description,
+    bool IsActive,
+    string StartDate,
+    string EndDate
 );

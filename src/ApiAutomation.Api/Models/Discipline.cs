@@ -6,35 +6,59 @@ namespace ApiAutomation.Api.Models;
 public record Discipline(
     /// <summary>Unique identifier</summary>
     Guid Id,
-    /// <summary>Discipline code (e.g., EL, GAS)</summary>
-    string Code,
     /// <summary>Discipline name</summary>
-    string Name,
+    string? Name,
     /// <summary>Description of the discipline</summary>
     string? Description,
+    /// <summary>Discipline code (e.g., EL, GAS)</summary>
+    string Code,
+    /// <summary>Index code for ordering</summary>
+    int? IndexCode,
+    /// <summary>Priority for ordering</summary>
+    int? Priority,
     /// <summary>Whether the discipline is active</summary>
     bool IsActive,
-    /// <summary>Creation timestamp in ISO 8601 UTC format</summary>
-    string CreatedAt,
-    /// <summary>Last modification timestamp in ISO 8601 UTC format</summary>
-    string? ModifiedAt
+    /// <summary>Start date in ISO 8601 format</summary>
+    string StartDate,
+    /// <summary>End date in ISO 8601 format</summary>
+    string EndDate
 );
 
 /// <summary>
 /// Request model for creating a discipline
 /// </summary>
 public record CreateDisciplineRequest(
+    string? Name,
+    string? Description,
     string Code,
-    string Name,
-    string? Description
+    int? IndexCode,
+    int? Priority,
+    string StartDate,
+    string EndDate
 );
 
 /// <summary>
 /// Request model for updating a discipline
 /// </summary>
 public record UpdateDisciplineRequest(
-    string? Code,
     string? Name,
     string? Description,
-    bool? IsActive
+    string? Code,
+    int? IndexCode,
+    int? Priority,
+    bool? IsActive,
+    string? StartDate,
+    string? EndDate
+);
+
+/// <summary>
+/// Represents link between disciplines and connection objects
+/// </summary>
+public record DisciplineConnectionObject(
+    Guid Id,
+    Guid DisciplineId,
+    Guid ConnectionObjectId,
+    bool IsActive,
+    string StartDate,
+    string EndDate
 );

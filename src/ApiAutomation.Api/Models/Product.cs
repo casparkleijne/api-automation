@@ -6,63 +6,95 @@ namespace ApiAutomation.Api.Models;
 public record Product(
     /// <summary>Unique identifier</summary>
     Guid Id,
-    /// <summary>Product code</summary>
-    string Code,
     /// <summary>Product name</summary>
-    string Name,
+    string? Name,
     /// <summary>Description of the product</summary>
     string? Description,
-    /// <summary>Associated discipline ID</summary>
-    Guid? DisciplineId,
-    /// <summary>Associated service ID</summary>
-    Guid? ServiceId,
+    /// <summary>Website link for more information</summary>
+    string? WebsiteLink,
+    /// <summary>Website link text</summary>
+    string? WebsiteText,
+    /// <summary>Long title for display</summary>
+    string? LongTitle,
+    /// <summary>Short title for display</summary>
+    string? ShortTitle,
+    /// <summary>Product code</summary>
+    string? ProductCode,
+    /// <summary>Tariff code</summary>
+    string? TariffCode,
+    /// <summary>Company-specific identifier</summary>
+    string? CompanyIdentifier,
+    /// <summary>Whether this is for large consumers</summary>
+    bool IsLargeConsumer,
+    /// <summary>Whether this is the standard product</summary>
+    bool IsStandard,
+    /// <summary>Priority for ordering</summary>
+    int? Priority,
+    /// <summary>Whether price is indicative</summary>
+    bool IsPriceIndicative,
     /// <summary>Associated sub-service ID</summary>
     Guid? SubServiceId,
-    /// <summary>Associated grid operator ID</summary>
-    Guid? GridOperatorId,
-    /// <summary>Product type</summary>
-    string? ProductType,
     /// <summary>Whether the product is active</summary>
     bool IsActive,
-    /// <summary>Effective start date in ISO 8601 format</summary>
-    string? EffectiveFrom,
-    /// <summary>Effective end date in ISO 8601 format</summary>
-    string? EffectiveTo,
-    /// <summary>Creation timestamp in ISO 8601 UTC format</summary>
-    string CreatedAt,
-    /// <summary>Last modification timestamp in ISO 8601 UTC format</summary>
-    string? ModifiedAt
+    /// <summary>Start date in ISO 8601 format</summary>
+    string StartDate,
+    /// <summary>End date in ISO 8601 format</summary>
+    string EndDate
 );
 
 /// <summary>
 /// Request model for creating a product
 /// </summary>
 public record CreateProductRequest(
-    string Code,
-    string Name,
+    string? Name,
     string? Description,
-    Guid? DisciplineId,
-    Guid? ServiceId,
+    string? WebsiteLink,
+    string? WebsiteText,
+    string? LongTitle,
+    string? ShortTitle,
+    string? ProductCode,
+    string? TariffCode,
+    string? CompanyIdentifier,
+    bool IsLargeConsumer,
+    bool IsStandard,
+    int? Priority,
+    bool IsPriceIndicative,
     Guid? SubServiceId,
-    Guid? GridOperatorId,
-    string? ProductType,
-    string? EffectiveFrom,
-    string? EffectiveTo
+    string StartDate,
+    string EndDate
 );
 
 /// <summary>
 /// Request model for updating a product
 /// </summary>
 public record UpdateProductRequest(
-    string? Code,
     string? Name,
     string? Description,
-    Guid? DisciplineId,
-    Guid? ServiceId,
+    string? WebsiteLink,
+    string? WebsiteText,
+    string? LongTitle,
+    string? ShortTitle,
+    string? ProductCode,
+    string? TariffCode,
+    string? CompanyIdentifier,
+    bool? IsLargeConsumer,
+    bool? IsStandard,
+    int? Priority,
+    bool? IsPriceIndicative,
     Guid? SubServiceId,
-    Guid? GridOperatorId,
-    string? ProductType,
     bool? IsActive,
-    string? EffectiveFrom,
-    string? EffectiveTo
+    string? StartDate,
+    string? EndDate
+);
+
+/// <summary>
+/// Represents a link between products and process variants
+/// </summary>
+public record ProductProcessVariant(
+    Guid Id,
+    Guid ProductId,
+    Guid ProcessVariantId,
+    bool IsActive,
+    string StartDate,
+    string EndDate
 );

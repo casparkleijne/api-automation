@@ -6,20 +6,20 @@ namespace ApiAutomation.Api.Models;
 public record Service(
     /// <summary>Unique identifier</summary>
     Guid Id,
-    /// <summary>Service code</summary>
-    string Code,
     /// <summary>Service name</summary>
-    string Name,
+    string? Name,
+    /// <summary>Service code</summary>
+    string? ServiceCode,
     /// <summary>Description of the service</summary>
     string? Description,
-    /// <summary>Associated discipline ID</summary>
-    Guid? DisciplineId,
+    /// <summary>Priority for ordering</summary>
+    int? Priority,
     /// <summary>Whether the service is active</summary>
     bool IsActive,
-    /// <summary>Creation timestamp in ISO 8601 UTC format</summary>
-    string CreatedAt,
-    /// <summary>Last modification timestamp in ISO 8601 UTC format</summary>
-    string? ModifiedAt
+    /// <summary>Start date in ISO 8601 format</summary>
+    string StartDate,
+    /// <summary>End date in ISO 8601 format</summary>
+    string EndDate
 );
 
 /// <summary>
@@ -28,59 +28,92 @@ public record Service(
 public record SubService(
     /// <summary>Unique identifier</summary>
     Guid Id,
-    /// <summary>Sub-service code</summary>
-    string Code,
     /// <summary>Sub-service name</summary>
-    string Name,
+    string? Name,
     /// <summary>Description of the sub-service</summary>
     string? Description,
+    /// <summary>Priority for ordering</summary>
+    int? Priority,
     /// <summary>Parent service ID</summary>
-    Guid ServiceId,
+    Guid? ServiceId,
+    /// <summary>Associated discipline ID</summary>
+    Guid? DisciplineId,
+    /// <summary>Associated grid operator ID</summary>
+    Guid? GridOperatorId,
+    /// <summary>Whether EAN code is required</summary>
+    bool EanCode,
+    /// <summary>Whether EAN check is enabled</summary>
+    bool EanCheck,
+    /// <summary>Whether notifications are enabled</summary>
+    bool Notification,
+    /// <summary>Explanation text</summary>
+    string? Explanation,
     /// <summary>Whether the sub-service is active</summary>
     bool IsActive,
-    /// <summary>Creation timestamp in ISO 8601 UTC format</summary>
-    string CreatedAt,
-    /// <summary>Last modification timestamp in ISO 8601 UTC format</summary>
-    string? ModifiedAt
+    /// <summary>Start date in ISO 8601 format</summary>
+    string StartDate,
+    /// <summary>End date in ISO 8601 format</summary>
+    string EndDate
 );
 
 /// <summary>
 /// Request model for creating a service
 /// </summary>
 public record CreateServiceRequest(
-    string Code,
-    string Name,
+    string? Name,
+    string? ServiceCode,
     string? Description,
-    Guid? DisciplineId
+    int? Priority,
+    string StartDate,
+    string EndDate
 );
 
 /// <summary>
 /// Request model for updating a service
 /// </summary>
 public record UpdateServiceRequest(
-    string? Code,
     string? Name,
+    string? ServiceCode,
     string? Description,
-    Guid? DisciplineId,
-    bool? IsActive
+    int? Priority,
+    bool? IsActive,
+    string? StartDate,
+    string? EndDate
 );
 
 /// <summary>
 /// Request model for creating a sub-service
 /// </summary>
 public record CreateSubServiceRequest(
-    string Code,
-    string Name,
+    string? Name,
     string? Description,
-    Guid ServiceId
+    int? Priority,
+    Guid? ServiceId,
+    Guid? DisciplineId,
+    Guid? GridOperatorId,
+    bool EanCode,
+    bool EanCheck,
+    bool Notification,
+    string? Explanation,
+    string StartDate,
+    string EndDate
 );
 
 /// <summary>
 /// Request model for updating a sub-service
 /// </summary>
 public record UpdateSubServiceRequest(
-    string? Code,
     string? Name,
     string? Description,
-    bool? IsActive
+    int? Priority,
+    Guid? ServiceId,
+    Guid? DisciplineId,
+    Guid? GridOperatorId,
+    bool? EanCode,
+    bool? EanCheck,
+    bool? Notification,
+    string? Explanation,
+    bool? IsActive,
+    string? StartDate,
+    string? EndDate
 );
