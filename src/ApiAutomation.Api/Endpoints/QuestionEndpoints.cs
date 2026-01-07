@@ -1,142 +1,31 @@
 using ApiAutomation.Api.Models;
+using ApiAutomation.Api.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiAutomation.Api.Endpoints;
 
 public static class QuestionEndpoints
 {
-    // In-memory storage for demo purposes
-    private static readonly List<Question> _questions = new()
-    {
-        new Question(
-            Id: Guid.Parse("99999999-9999-9999-9999-999999999991"),
-            Name: "Connection Capacity",
-            Description: "Question about connection capacity",
-            WebsiteLink: null,
-            WebsiteText: null,
-            Placeholder: "Select capacity",
-            Code: "Q001",
-            Priority: 1,
-            QuestionTitle: "Connection Capacity",
-            QuestionText: "What is the requested connection capacity?",
-            ResultFormat: "select",
-            HasAction: false,
-            IsEnabled: true,
-            AnswerHandler: 1,
-            IsMandatory: true,
-            AnswerTypeId: null,
-            ShowForAddressableObjects: true,
-            ShowForNonAddressableObjects: false,
-            ShowForAddressableObjectsOnly: false,
-            QuestionRequestTypeId: null,
-            IsActive: true,
-            StartDate: "2025-01-01T00:00:00.000Z",
-            EndDate: "2099-12-31T23:59:59.999Z"
-        ),
-        new Question(
-            Id: Guid.Parse("99999999-9999-9999-9999-999999999992"),
-            Name: "Installation Date",
-            Description: "Question about preferred installation date",
-            WebsiteLink: null,
-            WebsiteText: null,
-            Placeholder: "Select date",
-            Code: "Q002",
-            Priority: 2,
-            QuestionTitle: "Installation Date",
-            QuestionText: "What is the preferred installation date?",
-            ResultFormat: "date",
-            HasAction: false,
-            IsEnabled: true,
-            AnswerHandler: 2,
-            IsMandatory: true,
-            AnswerTypeId: null,
-            ShowForAddressableObjects: true,
-            ShowForNonAddressableObjects: true,
-            ShowForAddressableObjectsOnly: false,
-            QuestionRequestTypeId: null,
-            IsActive: true,
-            StartDate: "2025-01-01T00:00:00.000Z",
-            EndDate: "2099-12-31T23:59:59.999Z"
-        ),
-        new Question(
-            Id: Guid.Parse("99999999-9999-9999-9999-999999999993"),
-            Name: "Temporary Power",
-            Description: "Question about temporary power supply",
-            WebsiteLink: null,
-            WebsiteText: null,
-            Placeholder: null,
-            Code: "Q003",
-            Priority: 3,
-            QuestionTitle: "Temporary Power Supply",
-            QuestionText: "Do you need a temporary power supply during construction?",
-            ResultFormat: "boolean",
-            HasAction: false,
-            IsEnabled: true,
-            AnswerHandler: 3,
-            IsMandatory: false,
-            AnswerTypeId: null,
-            ShowForAddressableObjects: true,
-            ShowForNonAddressableObjects: true,
-            ShowForAddressableObjectsOnly: false,
-            QuestionRequestTypeId: null,
-            IsActive: true,
-            StartDate: "2025-01-01T00:00:00.000Z",
-            EndDate: "2099-12-31T23:59:59.999Z"
-        )
-    };
-
-    private static readonly List<Answer> _answers = new()
-    {
-        new Answer(
-            Id: Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
-            Code: "A001_1",
-            Text: "1x25A (Single phase)",
-            Description: "Suitable for small apartments",
-            QuestionId: Guid.Parse("99999999-9999-9999-9999-999999999991"),
-            DisplayOrder: 1,
-            IsDefault: false,
-            IsActive: true,
-            CreatedAt: "2025-01-01T00:00:00.000Z",
-            ModifiedAt: null
-        ),
-        new Answer(
-            Id: Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaab1"),
-            Code: "A001_2",
-            Text: "3x25A (Three phase)",
-            Description: "Standard for most homes",
-            QuestionId: Guid.Parse("99999999-9999-9999-9999-999999999991"),
-            DisplayOrder: 2,
-            IsDefault: true,
-            IsActive: true,
-            CreatedAt: "2025-01-01T00:00:00.000Z",
-            ModifiedAt: null
-        ),
-        new Answer(
-            Id: Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaab2"),
-            Code: "A001_3",
-            Text: "3x35A (Three phase)",
-            Description: "For homes with heat pump or EV charger",
-            QuestionId: Guid.Parse("99999999-9999-9999-9999-999999999991"),
-            DisplayOrder: 3,
-            IsDefault: false,
-            IsActive: true,
-            CreatedAt: "2025-01-01T00:00:00.000Z",
-            ModifiedAt: null
-        )
-    };
-
     public static void MapQuestionEndpoints(this WebApplication app)
     {
         var questionGroup = app.MapGroup("/api/v1/questions")
             .WithTags("Questions");
 
         // GET /api/v1/questions - List all questions
-        questionGroup.MapGet("/", (int? page, int? pageSize, Guid? answerTypeId, bool? activeOnly, bool? mandatoryOnly) =>
+        questionGroup.MapGet("/", async (
+            IQuestionRepository repo,
+            int? page,
+            int? pageSize,
+            Guid? answerTypeId,
+            bool? activeOnly,
+            bool? mandatoryOnly) =>
         {
             var currentPage = Math.Max(1, page ?? 1);
             var currentPageSize = Math.Clamp(pageSize ?? 20, 1, 100);
 
-            var filtered = _questions.AsEnumerable();
+            var all = await repo.GetAllAsync();
+            var filtered = all.AsEnumerable();
+
             if (activeOnly == true) filtered = filtered.Where(x => x.IsActive);
             if (mandatoryOnly == true) filtered = filtered.Where(x => x.IsMandatory);
             if (answerTypeId.HasValue) filtered = filtered.Where(x => x.AnswerTypeId == answerTypeId);
@@ -170,9 +59,9 @@ public static class QuestionEndpoints
         .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
 
         // GET /api/v1/questions/{id} - Get single question
-        questionGroup.MapGet("/{id:guid}", (Guid id) =>
+        questionGroup.MapGet("/{id:guid}", async (IQuestionRepository repo, Guid id) =>
         {
-            var item = _questions.FirstOrDefault(x => x.Id == id);
+            var item = await repo.GetByIdAsync(id);
             return item is not null
                 ? Results.Ok(item)
                 : Results.Problem(
@@ -193,9 +82,13 @@ public static class QuestionEndpoints
         .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
 
         // GET /api/v1/questions/{id}/answers - Get answers for a question
-        questionGroup.MapGet("/{id:guid}/answers", (Guid id) =>
+        questionGroup.MapGet("/{id:guid}/answers", async (
+            IQuestionRepository questionRepo,
+            IAnswerRepository answerRepo,
+            Guid id) =>
         {
-            if (!_questions.Any(x => x.Id == id))
+            var question = await questionRepo.GetByIdAsync(id);
+            if (question is null)
             {
                 return Results.Problem(
                     title: "Not Found",
@@ -204,12 +97,8 @@ public static class QuestionEndpoints
                 );
             }
 
-            var answers = _answers
-                .Where(x => x.QuestionId == id)
-                .OrderBy(x => x.DisplayOrder)
-                .ToList();
-
-            return Results.Ok(answers);
+            var answers = await answerRepo.GetByQuestionIdAsync(id);
+            return Results.Ok(answers.ToList());
         })
         .WithName("GetQuestionAnswers")
         .WithOpenApi(op =>
@@ -223,35 +112,9 @@ public static class QuestionEndpoints
         .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
 
         // POST /api/v1/questions - Create new question
-        questionGroup.MapPost("/", (CreateQuestionRequest request) =>
+        questionGroup.MapPost("/", async (IQuestionRepository repo, CreateQuestionRequest request) =>
         {
-            var newItem = new Question(
-                Id: Guid.NewGuid(),
-                Name: request.Name,
-                Description: request.Description,
-                WebsiteLink: request.WebsiteLink,
-                WebsiteText: request.WebsiteText,
-                Placeholder: request.Placeholder,
-                Code: request.Code,
-                Priority: request.Priority,
-                QuestionTitle: request.QuestionTitle,
-                QuestionText: request.QuestionText,
-                ResultFormat: request.ResultFormat,
-                HasAction: request.HasAction,
-                IsEnabled: request.IsEnabled,
-                AnswerHandler: request.AnswerHandler,
-                IsMandatory: request.IsMandatory,
-                AnswerTypeId: request.AnswerTypeId,
-                ShowForAddressableObjects: request.ShowForAddressableObjects,
-                ShowForNonAddressableObjects: request.ShowForNonAddressableObjects,
-                ShowForAddressableObjectsOnly: request.ShowForAddressableObjectsOnly,
-                QuestionRequestTypeId: request.QuestionRequestTypeId,
-                IsActive: true,
-                StartDate: request.StartDate,
-                EndDate: request.EndDate
-            );
-
-            _questions.Add(newItem);
+            var newItem = await repo.CreateAsync(request);
             return Results.Created($"/api/v1/questions/{newItem.Id}", newItem);
         })
         .WithName("CreateQuestion")
@@ -269,47 +132,16 @@ public static class QuestionEndpoints
         .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
 
         // PUT /api/v1/questions/{id} - Update question
-        questionGroup.MapPut("/{id:guid}", (Guid id, UpdateQuestionRequest request) =>
+        questionGroup.MapPut("/{id:guid}", async (IQuestionRepository repo, Guid id, UpdateQuestionRequest request) =>
         {
-            var index = _questions.FindIndex(x => x.Id == id);
-            if (index < 0)
-            {
-                return Results.Problem(
+            var updated = await repo.UpdateAsync(id, request);
+            return updated is not null
+                ? Results.Ok(updated)
+                : Results.Problem(
                     title: "Not Found",
                     detail: $"Question with ID '{id}' was not found.",
                     statusCode: StatusCodes.Status404NotFound
                 );
-            }
-
-            var existing = _questions[index];
-            var updated = existing with
-            {
-                Name = request.Name ?? existing.Name,
-                Description = request.Description ?? existing.Description,
-                WebsiteLink = request.WebsiteLink ?? existing.WebsiteLink,
-                WebsiteText = request.WebsiteText ?? existing.WebsiteText,
-                Placeholder = request.Placeholder ?? existing.Placeholder,
-                Code = request.Code ?? existing.Code,
-                Priority = request.Priority ?? existing.Priority,
-                QuestionTitle = request.QuestionTitle ?? existing.QuestionTitle,
-                QuestionText = request.QuestionText ?? existing.QuestionText,
-                ResultFormat = request.ResultFormat ?? existing.ResultFormat,
-                HasAction = request.HasAction ?? existing.HasAction,
-                IsEnabled = request.IsEnabled ?? existing.IsEnabled,
-                AnswerHandler = request.AnswerHandler ?? existing.AnswerHandler,
-                IsMandatory = request.IsMandatory ?? existing.IsMandatory,
-                AnswerTypeId = request.AnswerTypeId ?? existing.AnswerTypeId,
-                ShowForAddressableObjects = request.ShowForAddressableObjects ?? existing.ShowForAddressableObjects,
-                ShowForNonAddressableObjects = request.ShowForNonAddressableObjects ?? existing.ShowForNonAddressableObjects,
-                ShowForAddressableObjectsOnly = request.ShowForAddressableObjectsOnly ?? existing.ShowForAddressableObjectsOnly,
-                QuestionRequestTypeId = request.QuestionRequestTypeId ?? existing.QuestionRequestTypeId,
-                IsActive = request.IsActive ?? existing.IsActive,
-                StartDate = request.StartDate ?? existing.StartDate,
-                EndDate = request.EndDate ?? existing.EndDate
-            };
-
-            _questions[index] = updated;
-            return Results.Ok(updated);
         })
         .WithName("UpdateQuestion")
         .WithOpenApi(op =>
@@ -327,20 +159,16 @@ public static class QuestionEndpoints
         .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
 
         // DELETE /api/v1/questions/{id} - Delete question
-        questionGroup.MapDelete("/{id:guid}", (Guid id) =>
+        questionGroup.MapDelete("/{id:guid}", async (IQuestionRepository repo, Guid id) =>
         {
-            var index = _questions.FindIndex(x => x.Id == id);
-            if (index < 0)
-            {
-                return Results.Problem(
+            var deleted = await repo.DeleteAsync(id);
+            return deleted
+                ? Results.NoContent()
+                : Results.Problem(
                     title: "Not Found",
                     detail: $"Question with ID '{id}' was not found.",
                     statusCode: StatusCodes.Status404NotFound
                 );
-            }
-
-            _questions.RemoveAt(index);
-            return Results.NoContent();
         })
         .WithName("DeleteQuestion")
         .WithOpenApi(op =>
@@ -361,12 +189,19 @@ public static class QuestionEndpoints
             .WithTags("Answers");
 
         // GET /api/v1/answers - List all answers
-        answerGroup.MapGet("/", (int? page, int? pageSize, Guid? questionId, bool? activeOnly) =>
+        answerGroup.MapGet("/", async (
+            IAnswerRepository repo,
+            int? page,
+            int? pageSize,
+            Guid? questionId,
+            bool? activeOnly) =>
         {
             var currentPage = Math.Max(1, page ?? 1);
             var currentPageSize = Math.Clamp(pageSize ?? 20, 1, 100);
 
-            var filtered = _answers.AsEnumerable();
+            var all = await repo.GetAllAsync();
+            var filtered = all.AsEnumerable();
+
             if (activeOnly == true) filtered = filtered.Where(x => x.IsActive);
             if (questionId.HasValue) filtered = filtered.Where(x => x.QuestionId == questionId);
 
@@ -399,9 +234,9 @@ public static class QuestionEndpoints
         .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
 
         // GET /api/v1/answers/{id} - Get single answer
-        answerGroup.MapGet("/{id:guid}", (Guid id) =>
+        answerGroup.MapGet("/{id:guid}", async (IAnswerRepository repo, Guid id) =>
         {
-            var item = _answers.FirstOrDefault(x => x.Id == id);
+            var item = await repo.GetByIdAsync(id);
             return item is not null
                 ? Results.Ok(item)
                 : Results.Problem(
@@ -422,9 +257,13 @@ public static class QuestionEndpoints
         .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
 
         // POST /api/v1/answers - Create new answer
-        answerGroup.MapPost("/", (CreateAnswerRequest request) =>
+        answerGroup.MapPost("/", async (
+            IQuestionRepository questionRepo,
+            IAnswerRepository answerRepo,
+            CreateAnswerRequest request) =>
         {
-            if (!_questions.Any(x => x.Id == request.QuestionId))
+            var question = await questionRepo.GetByIdAsync(request.QuestionId);
+            if (question is null)
             {
                 return Results.Problem(
                     title: "Bad Request",
@@ -433,21 +272,7 @@ public static class QuestionEndpoints
                 );
             }
 
-            var now = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
-            var newItem = new Answer(
-                Id: Guid.NewGuid(),
-                Code: request.Code,
-                Text: request.Text,
-                Description: request.Description,
-                QuestionId: request.QuestionId,
-                DisplayOrder: request.DisplayOrder,
-                IsDefault: request.IsDefault,
-                IsActive: true,
-                CreatedAt: now,
-                ModifiedAt: null
-            );
-
-            _answers.Add(newItem);
+            var newItem = await answerRepo.CreateAsync(request);
             return Results.Created($"/api/v1/answers/{newItem.Id}", newItem);
         })
         .WithName("CreateAnswer")
@@ -465,33 +290,16 @@ public static class QuestionEndpoints
         .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
 
         // PUT /api/v1/answers/{id} - Update answer
-        answerGroup.MapPut("/{id:guid}", (Guid id, UpdateAnswerRequest request) =>
+        answerGroup.MapPut("/{id:guid}", async (IAnswerRepository repo, Guid id, UpdateAnswerRequest request) =>
         {
-            var index = _answers.FindIndex(x => x.Id == id);
-            if (index < 0)
-            {
-                return Results.Problem(
+            var updated = await repo.UpdateAsync(id, request);
+            return updated is not null
+                ? Results.Ok(updated)
+                : Results.Problem(
                     title: "Not Found",
                     detail: $"Answer with ID '{id}' was not found.",
                     statusCode: StatusCodes.Status404NotFound
                 );
-            }
-
-            var existing = _answers[index];
-            var now = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
-            var updated = existing with
-            {
-                Code = request.Code ?? existing.Code,
-                Text = request.Text ?? existing.Text,
-                Description = request.Description ?? existing.Description,
-                DisplayOrder = request.DisplayOrder ?? existing.DisplayOrder,
-                IsDefault = request.IsDefault ?? existing.IsDefault,
-                IsActive = request.IsActive ?? existing.IsActive,
-                ModifiedAt = now
-            };
-
-            _answers[index] = updated;
-            return Results.Ok(updated);
         })
         .WithName("UpdateAnswer")
         .WithOpenApi(op =>
@@ -509,20 +317,16 @@ public static class QuestionEndpoints
         .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
 
         // DELETE /api/v1/answers/{id} - Delete answer
-        answerGroup.MapDelete("/{id:guid}", (Guid id) =>
+        answerGroup.MapDelete("/{id:guid}", async (IAnswerRepository repo, Guid id) =>
         {
-            var index = _answers.FindIndex(x => x.Id == id);
-            if (index < 0)
-            {
-                return Results.Problem(
+            var deleted = await repo.DeleteAsync(id);
+            return deleted
+                ? Results.NoContent()
+                : Results.Problem(
                     title: "Not Found",
                     detail: $"Answer with ID '{id}' was not found.",
                     statusCode: StatusCodes.Status404NotFound
                 );
-            }
-
-            _answers.RemoveAt(index);
-            return Results.NoContent();
         })
         .WithName("DeleteAnswer")
         .WithOpenApi(op =>

@@ -1,5 +1,7 @@
 using ApiAutomation.Api.Endpoints;
 using ApiAutomation.Api.Models;
+using ApiAutomation.Api.Repositories;
+using ApiAutomation.Api.Repositories.InMemory;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
@@ -88,6 +90,17 @@ builder.Services.AddSwaggerGen(options =>
 
 // Add ProblemDetails for RFC 7807 compliant errors (ID05)
 builder.Services.AddProblemDetails();
+
+// Register repositories for dependency injection
+builder.Services.AddSingleton<IConnectionObjectRepository, InMemoryConnectionObjectRepository>();
+builder.Services.AddSingleton<IGridOperatorRepository, InMemoryGridOperatorRepository>();
+builder.Services.AddSingleton<IDisciplineRepository, InMemoryDisciplineRepository>();
+builder.Services.AddSingleton<IServiceRepository, InMemoryServiceRepository>();
+builder.Services.AddSingleton<ISubServiceRepository, InMemorySubServiceRepository>();
+builder.Services.AddSingleton<IProductRepository, InMemoryProductRepository>();
+builder.Services.AddSingleton<IQuestionRepository, InMemoryQuestionRepository>();
+builder.Services.AddSingleton<IAnswerRepository, InMemoryAnswerRepository>();
+builder.Services.AddSingleton<IPriceComponentRepository, InMemoryPriceComponentRepository>();
 
 var app = builder.Build();
 
