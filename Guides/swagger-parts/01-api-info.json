@@ -1,0 +1,12 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "v1",
+    "title": "nl.mijnaansluiting.netbeheerders"
+  },
+  "host": "services.mijnaansluiting.nl",
+  "basePath": "/netbeheerders",
+  "schemes": [
+    "https"
+  ]
+}

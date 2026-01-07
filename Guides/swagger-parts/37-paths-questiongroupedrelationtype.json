@@ -1,0 +1,25 @@
+{
+  "paths": {
+    "/api/QuestionGroupedRelationType": {
+      "get": {
+        "tags": [
+          "QuestionGroupedRelationType"
+        ],
+        "operationId": "QuestionGroupedRelationType_GetMultiple",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    }
+  }
+}

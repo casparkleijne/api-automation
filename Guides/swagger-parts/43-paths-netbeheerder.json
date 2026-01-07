@@ -1,0 +1,51 @@
+{
+  "paths": {
+    "/api/netbeheerder/{netbeheerderCode}/discipline/{disciplineCode}/dienst/{dienstCode}/subdienst/{code}": {
+      "get": {
+        "tags": [
+          "SubDienst"
+        ],
+        "operationId": "SubDienst_GetSubdienstByRelations",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "name": "netbeheerderCode",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "disciplineCode",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "dienstCode",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "code",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    }
+  }
+}

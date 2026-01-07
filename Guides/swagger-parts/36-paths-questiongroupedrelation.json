@@ -1,0 +1,99 @@
+{
+  "paths": {
+    "/api/QuestionGroupedRelation/Question/{questionId}": {
+      "get": {
+        "tags": [
+          "QuestionGroupedRelation"
+        ],
+        "operationId": "QuestionGroupedRelation_GetQuestionGroupedRelationByQuestionId",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "name": "questionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    },
+    "/api/QuestionGroupedRelation": {
+      "post": {
+        "tags": [
+          "QuestionGroupedRelation"
+        ],
+        "operationId": "QuestionGroupedRelation_Post",
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "name": "item",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/QuestionGroupedRelation"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    },
+    "/api/QuestionGroupedRelation/{id}": {
+      "delete": {
+        "tags": [
+          "QuestionGroupedRelation"
+        ],
+        "operationId": "QuestionGroupedRelation_Delete",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    }
+  }
+}

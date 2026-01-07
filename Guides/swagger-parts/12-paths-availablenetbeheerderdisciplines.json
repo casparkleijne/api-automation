@@ -1,0 +1,46 @@
+{
+  "paths": {
+    "/api/AvailableNetbeheerderDisciplines/aansluitingsobject/{aansluitingsobjectId}": {
+      "post": {
+        "tags": [
+          "AvailableNetbeheerderDiscipline"
+        ],
+        "operationId": "AvailableNetbeheerderDiscipline_GetAsync",
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "name": "aansluitingsobjectId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "name": "coordinates",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Coordinates"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    }
+  }
+}

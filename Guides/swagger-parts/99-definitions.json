@@ -1,0 +1,1724 @@
+{
+  "definitions": {
+    "AansluitingsObject": {
+      "required": [
+        "endDate",
+        "startDate"
+      ],
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "code": {
+          "type": "string"
+        },
+        "priority": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "profileType": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "addressType": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "endDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "isActive": {
+          "type": "boolean"
+        },
+        "startDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "id": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        }
+      }
+    },
+    "AansluitingsObjectenProducten": {
+      "required": [
+        "endDate",
+        "startDate"
+      ],
+      "type": "object",
+      "properties": {
+        "aansluitingsObjectId": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        },
+        "productId": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        },
+        "endDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "isActive": {
+          "type": "boolean"
+        },
+        "startDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "id": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        }
+      }
+    },
+    "AansluitingsObjectGebruikerType": {
+      "required": [
+        "endDate",
+        "startDate"
+      ],
+      "type": "object",
+      "properties": {
+        "netbeheerderID": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        },
+        "disciplineID": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        },
+        "aansluitingsObjectID": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        },
+        "gebruikerType": {
+          "maxLength": 50,
+          "minLength": 0,
+          "type": "string"
+        },
+        "endDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "isActive": {
+          "type": "boolean"
+        },
+        "startDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "id": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        }
+      }
+    },
+    "AansluitingsObjectNetbeheerderSetting": {
+      "type": "object",
+      "properties": {
+        "netbeheerder": {
+          "$ref": "#/definitions/NetBeheerder"
+        },
+        "netbeheerderID": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        },
+        "aansluitingsObject": {
+          "$ref": "#/definitions/AansluitingsObject"
+        },
+        "aansluitingsObjectID": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        },
+        "allowMultipleSubdiensten": {
+          "type": "boolean"
+        },
+        "id": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        }
+      }
+    },
+    "NetBeheerder": {
+      "required": [
+        "endDate",
+        "startDate"
+      ],
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "netBeheerderCode": {
+          "type": "string"
+        },
+        "verwerkerCode": {
+          "type": "string"
+        },
+        "websiteUri": {
+          "type": "string"
+        },
+        "department": {
+          "type": "string"
+        },
+        "primaryEmailAddress": {
+          "type": "string"
+        },
+        "contactPersonID": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "companyID": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        },
+        "primaryAddressID": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "secondaryAddressID": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "primaryPostBoxAddressID": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "secondaryPostBoxAddressID": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "customerService": {
+          "$ref": "#/definitions/CustomerService"
+        },
+        "customerServiceID": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        },
+        "aansluitGereedDatumActive": {
+          "type": "boolean"
+        },
+        "endDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "isActive": {
+          "type": "boolean"
+        },
+        "startDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "id": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        }
+      }
+    },
+    "CustomerService": {
+      "required": [
+        "endDate",
+        "startDate"
+      ],
+      "type": "object",
+      "properties": {
+        "primaryWebsiteUri": {
+          "type": "string"
+        },
+        "tariffWebsiteUri": {
+          "type": "string"
+        },
+        "info": {
+          "type": "string"
+        },
+        "firstPhone": {
+          "type": "string"
+        },
+        "secondPhone": {
+          "type": "string"
+        },
+        "thirdPhone": {
+          "type": "string"
+        },
+        "fourthPhone": {
+          "type": "string"
+        },
+        "endDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "isActive": {
+          "type": "boolean"
+        },
+        "startDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "id": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        }
+      }
+    },
+    "AansluitingsObjectProcesVariant": {
+      "required": [
+        "endDate",
+        "startDate"
+      ],
+      "type": "object",
+      "properties": {
+        "aansluitingsObjectId": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        },
+        "procesVariantId": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        },
+        "netBeheerderId": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        },
+        "minimaleWachtTijd": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "isRelatief": {
+          "type": "boolean"
+        },
+        "endDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "isActive": {
+          "type": "boolean"
+        },
+        "startDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "id": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        }
+      }
+    },
+    "ActionCondition": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "expression": {
+          "type": "string"
+        },
+        "id": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        }
+      }
+    },
+    "ActionConditionAnswerType": {
+      "type": "object",
+      "properties": {
+        "answerTypeId": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        },
+        "actionConditionId": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        },
+        "id": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        }
+      }
+    },
+    "Address": {
+      "required": [
+        "number",
+        "postalCode",
+        "endDate",
+        "startDate"
+      ],
+      "type": "object",
+      "properties": {
+        "street": {
+          "type": "string"
+        },
+        "number": {
+          "type": "string"
+        },
+        "suffix": {
+          "type": "string"
+        },
+        "postalCode": {
+          "pattern": "^[1-9][0-9]{3} ?[A-Z]{2}$",
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string"
+        },
+        "endDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "isActive": {
+          "type": "boolean"
+        },
+        "startDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "id": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        }
+      }
+    },
+    "AlgemeneVoorwaarden": {
+      "required": [
+        "endDate",
+        "startDate"
+      ],
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "websiteUri": {
+          "type": "string"
+        },
+        "netBeheerderId": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        },
+        "disciplineId": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        },
+        "endDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "isActive": {
+          "type": "boolean"
+        },
+        "startDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "id": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        }
+      }
+    },
+    "AnswerType": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "isQuantifiable": {
+          "type": "boolean"
+        },
+        "isEnabled": {
+          "type": "boolean"
+        },
+        "isProcessable": {
+          "type": "boolean"
+        },
+        "id": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        }
+      }
+    },
+    "Availability": {
+      "type": "object",
+      "properties": {
+        "startDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "endDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "netBeheerderID": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        },
+        "id": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        }
+      }
+    },
+    "Coordinates": {
+      "type": "object",
+      "properties": {
+        "latitude": {
+          "format": "double",
+          "type": "number"
+        },
+        "longitude": {
+          "format": "double",
+          "type": "number"
+        }
+      }
+    },
+    "Branding": {
+      "required": [
+        "endDate",
+        "startDate"
+      ],
+      "type": "object",
+      "properties": {
+        "websiteUri": {
+          "type": "string"
+        },
+        "logoImageUri": {
+          "type": "string"
+        },
+        "endDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "isActive": {
+          "type": "boolean"
+        },
+        "startDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "id": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        }
+      }
+    },
+    "BTWCode": {
+      "required": [
+        "endDate",
+        "startDate"
+      ],
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "value": {
+          "format": "double",
+          "type": "number"
+        },
+        "isEnabled": {
+          "type": "boolean"
+        },
+        "priority": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "endDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "isActive": {
+          "type": "boolean"
+        },
+        "startDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "id": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        }
+      }
+    },
+    "Company": {
+      "required": [
+        "endDate",
+        "startDate"
+      ],
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "kvkNumber": {
+          "type": "string"
+        },
+        "btwNumber": {
+          "type": "string"
+        },
+        "iban": {
+          "type": "string"
+        },
+        "btwVerlegd": {
+          "type": "boolean"
+        },
+        "primaryAddressID": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "secondaryAddressID": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "primaryPostBoxAddressID": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "secondaryPostBoxAddressID": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "endDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "isActive": {
+          "type": "boolean"
+        },
+        "startDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "id": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        }
+      }
+    },
+    "ContactPerson": {
+      "required": [
+        "endDate",
+        "startDate"
+      ],
+      "type": "object",
+      "properties": {
+        "gender": {
+          "type": "string"
+        },
+        "initials": {
+          "type": "string"
+        },
+        "firstName": {
+          "type": "string"
+        },
+        "middleName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "primaryEmail": {
+          "type": "string"
+        },
+        "secondaryEmail": {
+          "type": "string"
+        },
+        "primaryPhone": {
+          "type": "string"
+        },
+        "secondaryPhone": {
+          "type": "string"
+        },
+        "fax": {
+          "type": "string"
+        },
+        "endDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "isActive": {
+          "type": "boolean"
+        },
+        "startDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "id": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        }
+      }
+    },
+    "Dienst": {
+      "required": [
+        "endDate",
+        "startDate"
+      ],
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "dienstCode": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "priority": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "endDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "isActive": {
+          "type": "boolean"
+        },
+        "startDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "id": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        }
+      }
+    },
+    "Discipline": {
+      "required": [
+        "code",
+        "endDate",
+        "startDate"
+      ],
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "code": {
+          "type": "string"
+        },
+        "indexCode": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "priority": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "endDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "isActive": {
+          "type": "boolean"
+        },
+        "startDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "id": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        }
+      }
+    },
+    "DisciplinesAansluitingsObjecten": {
+      "required": [
+        "endDate",
+        "startDate"
+      ],
+      "type": "object",
+      "properties": {
+        "disciplineId": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        },
+        "aansluitingsObjectId": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        },
+        "endDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "isActive": {
+          "type": "boolean"
+        },
+        "startDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "id": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        }
+      }
+    },
+    "Disclaimer": {
+      "required": [
+        "endDate",
+        "startDate"
+      ],
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "websiteUri": {
+          "type": "string"
+        },
+        "netBeheerderId": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        },
+        "disciplineId": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        },
+        "endDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "isActive": {
+          "type": "boolean"
+        },
+        "startDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "id": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        }
+      }
+    },
+    "DocumentTemplate": {
+      "required": [
+        "endDate",
+        "startDate"
+      ],
+      "type": "object",
+      "properties": {
+        "netBeheerderId": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        },
+        "netBeheerder": {
+          "$ref": "#/definitions/NetBeheerder"
+        },
+        "name": {
+          "type": "string"
+        },
+        "documentHeader": {
+          "type": "string"
+        },
+        "documentFooter": {
+          "type": "string"
+        },
+        "documentTemplateTypeId": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        },
+        "documentTemplateType": {
+          "$ref": "#/definitions/DocumentTemplateType"
+        },
+        "endDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "isActive": {
+          "type": "boolean"
+        },
+        "startDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "id": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        }
+      }
+    },
+    "DocumentTemplateType": {
+      "required": [
+        "endDate",
+        "startDate"
+      ],
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "endDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "isActive": {
+          "type": "boolean"
+        },
+        "startDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "id": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        }
+      }
+    },
+    "DocumentTemplateParameter": {
+      "required": [
+        "endDate",
+        "startDate"
+      ],
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        },
+        "endDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "isActive": {
+          "type": "boolean"
+        },
+        "startDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "id": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        }
+      }
+    },
+    "CreateNetbeheerderModel": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "netbeheerderCode": {
+          "type": "string"
+        },
+        "startDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "endDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "disciplineId": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        }
+      }
+    },
+    "PostBoxAddress": {
+      "required": [
+        "endDate",
+        "startDate"
+      ],
+      "type": "object",
+      "properties": {
+        "postBoxNumber": {
+          "type": "string"
+        },
+        "postalCode": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string"
+        },
+        "endDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "isActive": {
+          "type": "boolean"
+        },
+        "startDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "id": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        }
+      }
+    },
+    "PrijsComponent": {
+      "required": [
+        "endDate",
+        "startDate"
+      ],
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "isEnabled": {
+          "type": "boolean"
+        },
+        "prijsComponentCode": {
+          "type": "string"
+        },
+        "bedrijfsEigenKenmerk": {
+          "type": "string"
+        },
+        "tariefCode": {
+          "type": "string"
+        },
+        "minValue": {
+          "format": "double",
+          "type": "number"
+        },
+        "maxValue": {
+          "format": "double",
+          "type": "number"
+        },
+        "defaultValue": {
+          "format": "double",
+          "type": "number"
+        },
+        "baseValue": {
+          "format": "double",
+          "type": "number"
+        },
+        "basePrice": {
+          "format": "double",
+          "type": "number"
+        },
+        "basePriceMonthly": {
+          "format": "double",
+          "type": "number"
+        },
+        "unitPrice": {
+          "format": "double",
+          "type": "number"
+        },
+        "unitPriceMonthly": {
+          "format": "double",
+          "type": "number"
+        },
+        "btwCodeId": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        },
+        "questionInfoId": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        },
+        "questionInfoPositionId": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "isUniqeForInvoice": {
+          "type": "boolean"
+        },
+        "isUitvalPrijsComponent": {
+          "type": "boolean"
+        },
+        "procesVariantId": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        },
+        "productId": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        },
+        "questionId": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        },
+        "endDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "isActive": {
+          "type": "boolean"
+        },
+        "startDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "id": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        }
+      }
+    },
+    "PrijsComponentAction": {
+      "required": [
+        "answerResult",
+        "endDate",
+        "startDate"
+      ],
+      "type": "object",
+      "properties": {
+        "prijsComponentId": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        },
+        "questionId": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        },
+        "answerResult": {
+          "type": "string"
+        },
+        "actionConditionId": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        },
+        "andPrijsComponentActionId": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        },
+        "endDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "isActive": {
+          "type": "boolean"
+        },
+        "startDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "id": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        }
+      }
+    },
+    "ProcesVariant": {
+      "required": [
+        "endDate",
+        "startDate"
+      ],
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "endDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "isActive": {
+          "type": "boolean"
+        },
+        "startDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "id": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        }
+      }
+    },
+    "Product": {
+      "required": [
+        "endDate",
+        "startDate"
+      ],
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "websiteLink": {
+          "type": "string"
+        },
+        "websiteText": {
+          "type": "string"
+        },
+        "longTitle": {
+          "type": "string"
+        },
+        "shortTitle": {
+          "type": "string"
+        },
+        "productCode": {
+          "type": "string"
+        },
+        "tariefCode": {
+          "type": "string"
+        },
+        "bedrijfseigenKenmerk": {
+          "type": "string"
+        },
+        "isGrootVerbruik": {
+          "type": "boolean"
+        },
+        "isStandaard": {
+          "type": "boolean"
+        },
+        "priority": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "isPrijsIndicatie": {
+          "type": "boolean"
+        },
+        "subDienstId": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        },
+        "endDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "isActive": {
+          "type": "boolean"
+        },
+        "startDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "id": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        }
+      }
+    },
+    "ProductProcesVariant": {
+      "required": [
+        "endDate",
+        "startDate"
+      ],
+      "type": "object",
+      "properties": {
+        "procesVariantId": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        },
+        "productId": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        },
+        "minimaleWachtTijd": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "isRelatief": {
+          "type": "boolean"
+        },
+        "endDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "isActive": {
+          "type": "boolean"
+        },
+        "startDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "id": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        }
+      }
+    },
+    "Question": {
+      "required": [
+        "endDate",
+        "startDate"
+      ],
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "websiteLink": {
+          "type": "string"
+        },
+        "websiteText": {
+          "type": "string"
+        },
+        "placeholder": {
+          "type": "string"
+        },
+        "code": {
+          "type": "string"
+        },
+        "priority": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "questionTitle": {
+          "type": "string"
+        },
+        "questionText": {
+          "type": "string"
+        },
+        "resultFormat": {
+          "type": "string"
+        },
+        "hasAction": {
+          "type": "boolean"
+        },
+        "isEnabled": {
+          "type": "boolean"
+        },
+        "answerHandler": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "isMandatory": {
+          "type": "boolean"
+        },
+        "answerTypeId": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        },
+        "showForAddressableObjects": {
+          "type": "boolean"
+        },
+        "showForNonAddressableObjects": {
+          "type": "boolean"
+        },
+        "showForAddressableObjectsOnly": {
+          "type": "boolean"
+        },
+        "questionAanvraagTypeId": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        },
+        "endDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "isActive": {
+          "type": "boolean"
+        },
+        "startDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "id": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        }
+      }
+    },
+    "QuestionAanvraagType": {
+      "required": [
+        "endDate",
+        "startDate"
+      ],
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "code": {
+          "type": "string"
+        },
+        "endDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "isActive": {
+          "type": "boolean"
+        },
+        "startDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "id": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        }
+      }
+    },
+    "QuestionAction": {
+      "required": [
+        "endDate",
+        "startDate"
+      ],
+      "type": "object",
+      "properties": {
+        "questionId": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        },
+        "actionConditionId": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        },
+        "actionCondition": {
+          "$ref": "#/definitions/ActionCondition"
+        },
+        "answerResult": {
+          "type": "string"
+        },
+        "questionInfoId": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        },
+        "questionInfoPositionId": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "procesVariantId": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        },
+        "minimaleWachtTijd": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "isRelatief": {
+          "type": "boolean"
+        },
+        "endDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "isActive": {
+          "type": "boolean"
+        },
+        "startDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "id": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        }
+      }
+    },
+    "QuestionGroupedRelation": {
+      "type": "object",
+      "properties": {
+        "questionGroupedRelationTypeId": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        },
+        "questionGroupedRelationType": {
+          "$ref": "#/definitions/QuestionGroupedRelationType"
+        },
+        "questionId": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        },
+        "question": {
+          "$ref": "#/definitions/Question"
+        },
+        "relationId": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        },
+        "groupingId": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        },
+        "id": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        }
+      }
+    },
+    "QuestionGroupedRelationType": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "code": {
+          "type": "string"
+        },
+        "id": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        }
+      }
+    },
+    "QuestionInfo": {
+      "required": [
+        "endDate",
+        "startDate"
+      ],
+      "type": "object",
+      "properties": {
+        "infoTitle": {
+          "type": "string"
+        },
+        "infoText": {
+          "type": "string"
+        },
+        "endDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "isActive": {
+          "type": "boolean"
+        },
+        "startDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "id": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        }
+      }
+    },
+    "QuestionRelation": {
+      "required": [
+        "endDate",
+        "startDate"
+      ],
+      "type": "object",
+      "properties": {
+        "primaryRelationType": {
+          "type": "string"
+        },
+        "secondaryRelationType": {
+          "type": "string"
+        },
+        "questionId": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        },
+        "netbeheerderId": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        },
+        "primaryRelationId": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        },
+        "secondaryRelationId": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "priority": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "eanCheck": {
+          "type": "boolean"
+        },
+        "endDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "isActive": {
+          "type": "boolean"
+        },
+        "startDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "id": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        }
+      }
+    },
+    "SubDienst": {
+      "required": [
+        "endDate",
+        "startDate"
+      ],
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "priority": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "dienstId": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        },
+        "disciplineId": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        },
+        "netBeheerderId": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        },
+        "eanCode": {
+          "type": "boolean"
+        },
+        "eanCheck": {
+          "type": "boolean"
+        },
+        "notificatie": {
+          "type": "boolean"
+        },
+        "explanation": {
+          "type": "string"
+        },
+        "endDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "isActive": {
+          "type": "boolean"
+        },
+        "startDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "id": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,188 @@
+{
+  "description": "Swagger API specification split into manageable parts",
+  "original_file": "swagger.json",
+  "parts": [
+    {
+      "file": "01-api-info.json",
+      "description": "API metadata, host, schemes"
+    },
+    {
+      "file": "02-paths-aansluitingsobject.json",
+      "description": "AansluitingsObject endpoints (6 paths)"
+    },
+    {
+      "file": "03-paths-aansluitingsobjectgebruikertype.json",
+      "description": "AansluitingsObjectGebruikerType endpoints (3 paths)"
+    },
+    {
+      "file": "04-paths-aansluitingsobjectprocesvariant.json",
+      "description": "AansluitingsObjectProcesVariant endpoints (6 paths)"
+    },
+    {
+      "file": "05-paths-aansluitingsobjectenproducten.json",
+      "description": "AansluitingsObjectenProducten endpoints (4 paths)"
+    },
+    {
+      "file": "06-paths-actioncondition.json",
+      "description": "ActionCondition endpoints (2 paths)"
+    },
+    {
+      "file": "07-paths-actionconditionanswertype.json",
+      "description": "ActionConditionAnswerType endpoints (2 paths)"
+    },
+    {
+      "file": "08-paths-address.json",
+      "description": "Address endpoints (2 paths)"
+    },
+    {
+      "file": "09-paths-algemenevoorwaarden.json",
+      "description": "AlgemeneVoorwaarden endpoints (6 paths)"
+    },
+    {
+      "file": "10-paths-answertype.json",
+      "description": "AnswerType endpoints (3 paths)"
+    },
+    {
+      "file": "11-paths-availability.json",
+      "description": "Availability endpoints (2 paths)"
+    },
+    {
+      "file": "12-paths-availablenetbeheerderdisciplines.json",
+      "description": "AvailableNetbeheerderDisciplines endpoints (1 paths)"
+    },
+    {
+      "file": "13-paths-btwcode.json",
+      "description": "BTWCode endpoints (2 paths)"
+    },
+    {
+      "file": "14-paths-branding.json",
+      "description": "Branding endpoints (2 paths)"
+    },
+    {
+      "file": "15-paths-company.json",
+      "description": "Company endpoints (2 paths)"
+    },
+    {
+      "file": "16-paths-contactperson.json",
+      "description": "ContactPerson endpoints (2 paths)"
+    },
+    {
+      "file": "17-paths-customerservice.json",
+      "description": "CustomerService endpoints (2 paths)"
+    },
+    {
+      "file": "18-paths-dienst.json",
+      "description": "Dienst endpoints (3 paths)"
+    },
+    {
+      "file": "19-paths-discipline.json",
+      "description": "Discipline endpoints (4 paths)"
+    },
+    {
+      "file": "20-paths-disciplinesaansluitingsobjecten.json",
+      "description": "DisciplinesAansluitingsObjecten endpoints (3 paths)"
+    },
+    {
+      "file": "21-paths-disclaimer.json",
+      "description": "Disclaimer endpoints (6 paths)"
+    },
+    {
+      "file": "22-paths-documenttemplate.json",
+      "description": "DocumentTemplate endpoints (5 paths)"
+    },
+    {
+      "file": "23-paths-documenttemplateparameter.json",
+      "description": "DocumentTemplateParameter endpoints (2 paths)"
+    },
+    {
+      "file": "24-paths-documenttemplatetype.json",
+      "description": "DocumentTemplateType endpoints (2 paths)"
+    },
+    {
+      "file": "25-paths-netbeheerder.json",
+      "description": "NetBeheerder endpoints (12 paths)"
+    },
+    {
+      "file": "26-paths-postboxaddress.json",
+      "description": "PostBoxAddress endpoints (2 paths)"
+    },
+    {
+      "file": "27-paths-prijscomponent.json",
+      "description": "PrijsComponent endpoints (5 paths)"
+    },
+    {
+      "file": "28-paths-prijscomponentaction.json",
+      "description": "PrijsComponentAction endpoints (4 paths)"
+    },
+    {
+      "file": "29-paths-procesvariant.json",
+      "description": "ProcesVariant endpoints (2 paths)"
+    },
+    {
+      "file": "30-paths-product.json",
+      "description": "Product endpoints (8 paths)"
+    },
+    {
+      "file": "31-paths-productprocesvariant.json",
+      "description": "ProductProcesVariant endpoints (3 paths)"
+    },
+    {
+      "file": "32-paths-question.json",
+      "description": "Question endpoints (14 paths)"
+    },
+    {
+      "file": "33-paths-questionaanvraagtype.json",
+      "description": "QuestionAanvraagType endpoints (2 paths)"
+    },
+    {
+      "file": "34-paths-questionaction.json",
+      "description": "QuestionAction endpoints (6 paths)"
+    },
+    {
+      "file": "35-paths-questioncodeexists.json",
+      "description": "QuestionCodeExists endpoints (1 paths)"
+    },
+    {
+      "file": "36-paths-questiongroupedrelation.json",
+      "description": "QuestionGroupedRelation endpoints (3 paths)"
+    },
+    {
+      "file": "37-paths-questiongroupedrelationtype.json",
+      "description": "QuestionGroupedRelationType endpoints (1 paths)"
+    },
+    {
+      "file": "38-paths-questioninfo.json",
+      "description": "QuestionInfo endpoints (2 paths)"
+    },
+    {
+      "file": "39-paths-questionrelation.json",
+      "description": "QuestionRelation endpoints (4 paths)"
+    },
+    {
+      "file": "40-paths-subdienst.json",
+      "description": "SubDienst endpoints (10 paths)"
+    },
+    {
+      "file": "41-paths-aansluitingsobject.json",
+      "description": "aansluitingsobject endpoints (1 paths)"
+    },
+    {
+      "file": "42-paths-aansluitingsobject-netbeheerder-setting.json",
+      "description": "aansluitingsobject-netbeheerder-setting endpoints (2 paths)"
+    },
+    {
+      "file": "43-paths-netbeheerder.json",
+      "description": "netbeheerder endpoints (1 paths)"
+    },
+    {
+      "file": "44-paths-sys.json",
+      "description": "sys endpoints (2 paths)"
+    },
+    {
+      "file": "99-definitions.json",
+      "description": "Schema definitions (40 schemas)"
+    }
+  ],
+  "total_paths": 157,
+  "total_definitions": 40
+}

@@ -1,0 +1,40 @@
+{
+  "paths": {
+    "/api/QuestionCodeExists/{questionCode}": {
+      "get": {
+        "tags": [
+          "Question"
+        ],
+        "operationId": "Question_QuestionCodeNameExists",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "name": "questionCode",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "questionId",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    }
+  }
+}
