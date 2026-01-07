@@ -1,56 +1,35 @@
+using ApiAutomation.Api.Repositories;
+
 namespace ApiAutomation.Api.Models;
 
 /// <summary>
 /// Represents a question (Vraag) in a questionnaire or form
 /// </summary>
 public record Question(
-    /// <summary>Unique identifier</summary>
     Guid Id,
-    /// <summary>Question name</summary>
     string? Name,
-    /// <summary>Description of the question</summary>
     string? Description,
-    /// <summary>Website link for more information</summary>
     string? WebsiteLink,
-    /// <summary>Website link text</summary>
     string? WebsiteText,
-    /// <summary>Placeholder text for input</summary>
     string? Placeholder,
-    /// <summary>Question code</summary>
     string? Code,
-    /// <summary>Priority for ordering</summary>
     int? Priority,
-    /// <summary>Question title for display</summary>
     string? QuestionTitle,
-    /// <summary>Question text</summary>
     string? QuestionText,
-    /// <summary>Result format specification</summary>
     string? ResultFormat,
-    /// <summary>Whether the question has an action</summary>
     bool HasAction,
-    /// <summary>Whether the question is enabled</summary>
     bool IsEnabled,
-    /// <summary>Answer handler type</summary>
     int? AnswerHandler,
-    /// <summary>Whether the question is mandatory</summary>
     bool IsMandatory,
-    /// <summary>Answer type ID</summary>
     Guid? AnswerTypeId,
-    /// <summary>Show for addressable objects</summary>
     bool ShowForAddressableObjects,
-    /// <summary>Show for non-addressable objects</summary>
     bool ShowForNonAddressableObjects,
-    /// <summary>Show for addressable objects only</summary>
     bool ShowForAddressableObjectsOnly,
-    /// <summary>Question request type ID</summary>
     Guid? QuestionRequestTypeId,
-    /// <summary>Whether the question is active</summary>
     bool IsActive,
-    /// <summary>Start date in ISO 8601 format</summary>
     string StartDate,
-    /// <summary>End date in ISO 8601 format</summary>
     string EndDate
-);
+) : IEntity, ICodeEntity, IActivatable;
 
 /// <summary>
 /// Represents an answer type for questions
@@ -227,27 +206,17 @@ public record QuestionRequestType(
 /// Represents an answer option for a question (Antwoord)
 /// </summary>
 public record Answer(
-    /// <summary>Unique identifier</summary>
     Guid Id,
-    /// <summary>Answer code</summary>
     string? Code,
-    /// <summary>Answer text</summary>
     string? Text,
-    /// <summary>Answer description</summary>
     string? Description,
-    /// <summary>Question ID this answer belongs to</summary>
     Guid QuestionId,
-    /// <summary>Display order</summary>
     int DisplayOrder,
-    /// <summary>Whether this is the default answer</summary>
     bool IsDefault,
-    /// <summary>Whether this answer is active</summary>
     bool IsActive,
-    /// <summary>Created timestamp in ISO 8601 format</summary>
     string CreatedAt,
-    /// <summary>Modified timestamp in ISO 8601 format</summary>
     string? ModifiedAt
-);
+) : IEntity, ICodeEntity, IActivatable;
 
 /// <summary>
 /// Request model for creating an answer
