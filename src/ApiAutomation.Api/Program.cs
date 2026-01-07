@@ -1,3 +1,4 @@
+using ApiAutomation.Api.Caching;
 using ApiAutomation.Api.Data.Repositories;
 using ApiAutomation.Api.Data.Seeding;
 using ApiAutomation.Api.Endpoints;
@@ -97,6 +98,9 @@ builder.Services.AddProblemDetails();
 // Register AutoMapper for Entity <-> DTO mapping
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
+// Register memory caching
+builder.Services.AddApiCaching(builder.Configuration);
+
 // Register mock data store (singleton - shared across all repositories)
 builder.Services.AddSingleton<MockDataStore>();
 
@@ -110,6 +114,10 @@ builder.Services.AddSingleton<IProductRepository, InMemoryProductRepository>();
 builder.Services.AddSingleton<IQuestionRepository, QuestionRepository>();
 builder.Services.AddSingleton<IAnswerRepository, AnswerRepository>();
 builder.Services.AddSingleton<IPriceComponentRepository, InMemoryPriceComponentRepository>();
+
+// Decorate repositories with caching (Decorator pattern)
+builder.Services.DecorateWithCaching<IQuestionRepository, CachedQuestionRepository>();
+builder.Services.DecorateWithCaching<IAnswerRepository, CachedAnswerRepository>();
 
 var app = builder.Build();
 
