@@ -1,4 +1,7 @@
+using ApiAutomation.Api.Data.Repositories;
+using ApiAutomation.Api.Data.Seeding;
 using ApiAutomation.Api.Endpoints;
+using ApiAutomation.Api.Mapping;
 using ApiAutomation.Api.Models;
 using ApiAutomation.Api.Repositories;
 using ApiAutomation.Api.Repositories.InMemory;
@@ -91,6 +94,12 @@ builder.Services.AddSwaggerGen(options =>
 // Add ProblemDetails for RFC 7807 compliant errors (ID05)
 builder.Services.AddProblemDetails();
 
+// Register AutoMapper for Entity <-> DTO mapping
+builder.Services.AddAutoMapper(typeof(MappingProfile));
+
+// Register mock data store (singleton - shared across all repositories)
+builder.Services.AddSingleton<MockDataStore>();
+
 // Register repositories for dependency injection
 builder.Services.AddSingleton<IConnectionObjectRepository, InMemoryConnectionObjectRepository>();
 builder.Services.AddSingleton<IGridOperatorRepository, InMemoryGridOperatorRepository>();
@@ -98,8 +107,8 @@ builder.Services.AddSingleton<IDisciplineRepository, InMemoryDisciplineRepositor
 builder.Services.AddSingleton<IServiceRepository, InMemoryServiceRepository>();
 builder.Services.AddSingleton<ISubServiceRepository, InMemorySubServiceRepository>();
 builder.Services.AddSingleton<IProductRepository, InMemoryProductRepository>();
-builder.Services.AddSingleton<IQuestionRepository, InMemoryQuestionRepository>();
-builder.Services.AddSingleton<IAnswerRepository, InMemoryAnswerRepository>();
+builder.Services.AddSingleton<IQuestionRepository, QuestionRepository>();
+builder.Services.AddSingleton<IAnswerRepository, AnswerRepository>();
 builder.Services.AddSingleton<IPriceComponentRepository, InMemoryPriceComponentRepository>();
 
 var app = builder.Build();
